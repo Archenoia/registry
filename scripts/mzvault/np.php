@@ -16,6 +16,7 @@ class np {
         $offset = ($page - 1) * $page_size;
         $text_len = 150;
         $data = (new Table(["cad_registry"=>"vocabulary"]))->where(["id"=>$topic_id])->find();
+        $meta_class = ENTITY_METABOLITE;
         $sql = "SELECT 
         CONCAT('BioCAD', LPAD(metabolite_id, 11, '0')) AS id,
         name,
@@ -32,15 +33,13 @@ class np {
             CONCAT(MID(metabolites.note, 1, {$text_len}), '...'),
             metabolites.note) AS note
     FROM
-        cad_registry.topic
+        cad_registry.topic            
             LEFT JOIN
-        registry_resolver ON registry_resolver.id = model_id
+        struct_data ON struct_data.metabolite_id = model_id
             LEFT JOIN
-        struct_data ON struct_data.metabolite_id = symbol_id
-            LEFT JOIN
-        metabolites ON metabolites.id = struct_data.metabolite_id
+        metabolites ON metabolites.id = model_id
     WHERE
-        topic_id = {$topic_id} AND topic.type = 0
+        topic_id = {$topic_id} AND topic.type = $meta_class
             AND metabolite_id IN (SELECT 
                 db_xref
             FROM
