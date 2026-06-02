@@ -644,7 +644,8 @@ var pages;
                             "Organism Source": "<a href=\"/taxonomy/?id=".concat(a.taxid, "\">").concat(a.taxname, "</a>"),
                             "Tissue": a.tissue,
                             "Adducts": a.adducts,
-                            "Size": a.size
+                            "Size": a.size,
+                            "Representative[Q1/Q3/rt(min)]": "<a href=\"#\" data=\"".concat(a.rep_id, "\">").concat(a.q1, "/").concat(a.q3, " [").concat(a.rt, "min]</a>")
                         };
                     });
                     if (data_2.Count > 0) {

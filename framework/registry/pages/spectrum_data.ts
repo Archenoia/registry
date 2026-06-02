@@ -22,7 +22,8 @@ namespace pages {
                             "Organism Source": `<a href="/taxonomy/?id=${a.taxid}">${a.taxname}</a>`,
                             "Tissue": a.tissue,
                             "Adducts": a.adducts,
-                            "Size": a.size
+                            "Size": a.size,
+                            "Representative[Q1/Q3/rt(min)]": `<a href="#" data="${a.rep_id}">${a.q1}/${a.q3} [${a.rt}min]</a>`
                         }
                     });
 
@@ -52,5 +53,9 @@ namespace pages {
         tissue: string;
         adducts: string;
         size: number;
+        q1: number;
+        q3: number;
+        rt: number;
+        rep_id: number;
     }
 }

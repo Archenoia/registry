@@ -86,6 +86,10 @@ declare namespace pages {
         tissue: string;
         adducts: string;
         size: number;
+        q1: number;
+        q3: number;
+        rt: number;
+        rep_id: number;
     }
 }
 declare namespace pages {
