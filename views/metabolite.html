@@ -40,7 +40,17 @@
                 Chinese Name: {$name_zh} <br />
                 Formula: <a href="/metabolites/?formula={$formula}">{$formula}</a> (<a
                   href="/metabolites/?exact_mass={$exact_mass}">{$exact_mass}</a>)<br />
-                SMILES: <code>{$smiles}</code>
+
+                SMILES:
+              <pre style="
+                max-width: 800px;
+                white-space: pre-wrap;       /* 保留空格和换行，且允许自动换行 */
+                overflow-wrap: break-word;   /* 超长单词强制断行 */
+                background-color: #f4f4f4;
+                padding: 10px;
+                margin: 0;
+              "><code>{$smiles}</code></pre>
+
               </p>
 
               {$synonyms}
@@ -80,9 +90,8 @@
               </section>
 
             </div>
-            <div class="col">
-              <canvas id="smiles_drawer" width="400px" height="350px" role="img" focusable="false"
-                style="float:right;"></canvas>
+            <div  class="col d-flex justify-content-center align-items-center" style="min-height: 350px;">
+              <canvas id="smiles_drawer" width="400px" height="350px" role="img" focusable="false"></canvas>
             </div>
           </div>
 
