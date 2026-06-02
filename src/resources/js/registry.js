@@ -639,7 +639,7 @@ var pages;
         spectrum_data.prototype.load_exp = function () {
             $ts.get(url_experiment_source, function (msg) {
                 if (msg.code == 0) {
-                    var data_2 = $ts(msg.info).Where(function (a) { return !Strings.Empty(a.taxid, true); }).Select(function (a) {
+                    var data_2 = $ts(msg.info).Where(function (a) { return (!Strings.Empty(a.taxid, true)) && (!Strings.Empty(a.taxname, true)); }).Select(function (a) {
                         return {
                             "Organism Source": "<a href=\"/taxonomy/?id=".concat(a.taxid, "\">").concat(a.taxname, "</a>"),
                             "Tissue": a.tissue,

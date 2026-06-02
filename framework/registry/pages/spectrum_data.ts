@@ -17,7 +17,7 @@ namespace pages {
         private load_exp() {
             $ts.get(url_experiment_source, msg => {
                 if (msg.code == 0) {
-                    let data = $ts(<lcms_exp_result[]>msg.info).Where(a => !Strings.Empty(a.taxid, true)).Select(a => {
+                    let data = $ts(<lcms_exp_result[]>msg.info).Where(a => (!Strings.Empty(a.taxid, true)) && (!Strings.Empty(a.taxname, true))).Select(a => {
                         return {
                             "Organism Source": `<a href="/taxonomy/?id=${a.taxid}">${a.taxname}</a>`,
                             "Tissue": a.tissue,
