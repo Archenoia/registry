@@ -639,18 +639,22 @@ var pages;
         spectrum_data.prototype.load_exp = function () {
             $ts.get(url_experiment_source, function (msg) {
                 if (msg.code == 0) {
-                    var data_2 = $ts(msg.info).Select(function (a) {
+                    var data_2 = $ts(msg.info).Where(function (a) { return !Strings.Empty(a.taxid, true); }).Select(function (a) {
                         return {
                             "Organism Source": "<a href=\"/taxonomy/?id=".concat(a.taxid, "\">").concat(a.taxname, "</a>"),
                             "Tissue": a.tissue,
                             "Adducts": a.adducts,
                             "Size": a.size,
-                            "Representative[Q1/Q3/rt(min)]": "<a href=\"#\" data=\"".concat(a.rep_id, "\">").concat(a.q1, "/").concat(a.q3, " [").concat(a.rt, "min]</a>")
+                            "MRM MSn[Q1/Q3]": "<a href=\"#\" class=\"spectrum_id\" data=\"".concat(a.rep_id, "\">").concat(a.q1, " / ").concat(a.q3, "</a>"),
+                            "rt(min)": a.rt
                         };
                     });
                     if (data_2.Count > 0) {
                         $ts("#exp_table").clear();
                         $ts.appendTable(data_2, "#exp_table", null, { class: "table" });
+                        $ts.select(".spectrum_id").onClick(function (a) {
+                            var rep_spectrum = a.getAttribute("data");
+                        });
                     }
                 }
             });

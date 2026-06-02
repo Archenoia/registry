@@ -17,19 +17,24 @@ namespace pages {
         private load_exp() {
             $ts.get(url_experiment_source, msg => {
                 if (msg.code == 0) {
-                    let data = $ts(<lcms_exp_result[]>msg.info).Select(a => {
+                    let data = $ts(<lcms_exp_result[]>msg.info).Where(a => !Strings.Empty(a.taxid, true)).Select(a => {
                         return {
                             "Organism Source": `<a href="/taxonomy/?id=${a.taxid}">${a.taxname}</a>`,
                             "Tissue": a.tissue,
                             "Adducts": a.adducts,
                             "Size": a.size,
-                            "Representative[Q1/Q3/rt(min)]": `<a href="#" data="${a.rep_id}">${a.q1}/${a.q3} [${a.rt}min]</a>`
+                            "MRM MSn[Q1/Q3]": `<a href="#" class="spectrum_id" data="${a.rep_id}">${a.q1} / ${a.q3}</a>`,
+                            "rt(min)": a.rt
                         }
                     });
 
                     if (data.Count > 0) {
                         $ts("#exp_table").clear();
                         $ts.appendTable(data, "#exp_table", null, { class: "table" });
+                        $ts.select(".spectrum_id").onClick(a => {
+                            let rep_spectrum = a.getAttribute("data");
+
+                        });
                     }
                 }
             })
