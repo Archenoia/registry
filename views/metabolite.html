@@ -37,11 +37,11 @@
           <div class="row">
             <div class="col">
               <p>
-                Chinese Name: {$name_zh} <br />
-                Formula: <a href="/metabolites/?formula={$formula}">{$formula}</a> (<a
+                <i class="bi bi-translate"></i> Chinese Name: {$name_zh} <br />
+                <i class="bi bi-flask-fill"></i> Formula: <a href="/metabolites/?formula={$formula}">{$formula}</a> (<a
                   href="/metabolites/?exact_mass={$exact_mass}">{$exact_mass}</a>)<br />
 
-                SMILES:
+                <i class="bi bi-fingerprint"></i> SMILES:
               <pre style="
                 max-width: 800px;
                 white-space: pre-wrap;       /* 保留空格和换行，且允许自动换行 */
@@ -90,12 +90,12 @@
               </section>
 
             </div>
-            <div  class="col d-flex justify-content-center align-items-center" style="min-height: 350px;">
+            <div class="col d-flex justify-content-center align-items-center" style="min-height: 350px;">
               <canvas id="smiles_drawer" width="400px" height="350px" role="img" focusable="false"></canvas>
             </div>
           </div>
 
-          <h4>Note</h4>
+          <h4><i class="bi bi-bookmarks-fill"></i> Note</h4>
           <p>{$note}</p>
         </div>
 
