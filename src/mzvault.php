@@ -104,6 +104,20 @@ class App {
     }
 
     /**
+     * Marine Natural Product
+     * 
+     * @access *
+     * @uses view
+     * @method get
+     * 
+     * @rate 30/min,500/hour,2000/day
+    */
+    public function marine_np($page=1) {
+        include_once APP_PATH . "/scripts/mzvault/np.php";
+        View::Show(APP_VIEWS . "/mzvault/np_lib.html", np::marine_np($page));
+    }
+
+    /**
      * @uses view
      * @method get
      * 

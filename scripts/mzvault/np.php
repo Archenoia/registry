@@ -1,15 +1,24 @@
 <?php
 
+define("plant_nps", 749);
+define("microbial_nps", 750);
+define("marine_nps", 1216);
+
 class np {
 
     public static function plant_np($page=1, $page_size = 50) {
         accessController::log_pageview("plant_np", "page_" . $page);
-        return self::np_library(749, "Plant Natural Product", $page, $page_size);
+        return self::np_library(plant_nps, "Plant Natural Product", $page, $page_size);
     }
 
     public static function microbial_np($page=1, $page_size = 50) {
         accessController::log_pageview("microbial_np", "page_" . $page);
-        return self::np_library(750, "Microbial Natural Product", $page, $page_size);
+        return self::np_library(microbial_nps, "Microbial Natural Product", $page, $page_size);
+    }
+
+    public static function marine_np($page=1, $page_size = 50) {
+        accessController::log_pageview("marine_np", "page_" . $page);
+        return self::np_library(marine_nps, "Marine Natural Product", $page, $page_size);
     }
 
     public static function np_library($topic_id, $name, $page=1, $page_size = 50) {
