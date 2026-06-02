@@ -55,7 +55,8 @@ class App {
             ->left_join("`cad_registry`.`ncbi_taxonomy`")
             ->on(["representative"=>"organism","ncbi_taxonomy"=>"id"])
             ->where([
-                "db_xref"=> $metabolite_id              
+                "db_xref"=> $metabolite_id,
+                "hits" => gt_eq(3)              
             ])
             ->order_by("hits", true)
             ->select([
