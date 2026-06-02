@@ -48,17 +48,27 @@ class App {
      * @rate 30/min,500/hour,2000/day
     */
     public function experiment_source() {
+        $metabolite_id = resolver::db_xref();
         $exp = (new Table(["mzvault"=>"annotation"]))
-            ->left_join("spectrum")
-            ->on(["spectrum"=>"annotation_id","annotation"=>"id"])
-            ->left_join("sampleinfo")
-            ->on(["spectrum"=>"sample_id","sampleinfo"=>"id"])
+            ->left_join("representative")
+            ->on(["representative"=>"precursor_id","annotation"=>"id"])
+            ->left_join("`cad_registry`.`ncbi_taxonomy`")
+            ->on(["representative"=>"organism","ncbi_taxonomy"=>"id"])
             ->where([
-                "db_xref"=> resolver::db_xref(),
-                "CHAR_LENGTH(splash_id)"=>gt("0")
-            ])->group_by(["adducts", "taxname" , "taxid" , "tissue"])
-            ->order_by("size", true)
-            ->select(["taxname", "taxid", "tissue", "adducts", "COUNT(*) AS size"])
+                "db_xref"=> $metabolite_id              
+            ])
+            ->order_by("hits", true)
+            ->select([
+                "`ncbi_taxonomy`.name as taxname", 
+                "organism as taxid", 
+                "tissue", 
+                "adducts", 
+                "hits AS size", 
+                "annotation.mz as q1",
+                "Q3 as q3", 
+                "round(rt/60) as rt", 
+                "`representative`.id as rep_id"
+            ])
             ;
 
         controller::success($exp);
