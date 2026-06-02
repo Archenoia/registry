@@ -64,9 +64,9 @@ class App {
                 "tissue", 
                 "adducts", 
                 "hits AS size", 
-                "annotation.mz as q1",
-                "Q3 as q3", 
-                "round(rt/60) as rt", 
+                "round(annotation.mz, 4) as q1",
+                "round(Q3, 2) as q3", 
+                "round(rt/60, 2) as rt", 
                 "`representative`.id as rep_id"
             ])
             ;
