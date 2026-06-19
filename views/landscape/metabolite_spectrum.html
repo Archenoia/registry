@@ -11,6 +11,18 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease;
         }
+
+        /* 针对第一列的限制样式 */
+        .table-custom th:first-child,
+        .table-custom td:first-child {
+            max-width: 300px;
+            /* 注意：不要写 width: 300px，使用 max-width 允许在小屏幕下自由收缩 */
+
+            /* 关键属性：允许长单词或 URL 在内部断行，防止撑破容器 */
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
     </style>
 </head>
 
@@ -48,7 +60,8 @@
                     <br />
                     <br />
 
-                    <table class="table">
+                    <table class="table table-custom">
+
                         <thead>
                             <tr>
                                 <th>Metabolite</th>
@@ -64,8 +77,8 @@
                                 <tr>
                                     <td>@mrm["name"] (<a href='/spectrum/?metab=@mrm["metab_id"]'>@mrm["metab_id"]</a>)
                                         <br />
-                                        <p>
-                                            @mrm["note"]
+                                        <p style="font-size: 0.8rem; color: grey;">
+                                            <i> @mrm["note"]</i>
                                         </p>
                                     </td>
                                     <td>@mrm["q1"]</td>
@@ -75,7 +88,7 @@
                                     <td>
                                         <a href='/metabolite/@mrm["metab_id"]'>
                                             <canvas class="smiles_drawer card-img-top" role="img" focusable="false"
-                                                style="max-height: 200px; width:150px;" data='@mrm["smiles"]'>
+                                                style="max-height: 250px; width:250px;" data='@mrm["smiles"]'>
                                             </canvas>
                                         </a>
                                     </td>

@@ -2,7 +2,7 @@
 
 class mrm_lib {
 
-    public static function get_mrm($page =1, $page_size = 50) {
+    public static function get_mrm($page =1, $page_size = 30) {
         $offset = ($page-1) * $page_size;
         $sql = "SELECT 
     CONCAT('BioCAD', LPAD(db_xref, 11, '0')) AS metab_id,
