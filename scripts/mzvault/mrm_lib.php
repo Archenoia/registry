@@ -9,11 +9,16 @@ class mrm_lib {
 
         if (!Utils::isDbNull($q1)) {
             $where = "WHERE ABS(`annotation_hits`.mz - $q1) <= $da";
+            accessController::log_pageview("mrm_lib", "q1={$q1}@page_{$page}");
         } else if (!Utils::isDbNull($q3)) {
             $where = "WHERE ABS(`q3` - $q3) <= $da";
+            accessController::log_pageview("mrm_lib", "q3={$q3}@page_{$page}");
         } else if (!Utils::isDbNull($rt)) {
             $rt = $rt * 60;
             $where = "WHERE ABS(`rt` - $rt) <= 5";
+            accessController::log_pageview("mrm_lib", "rt={$rt}@page_{$page}");
+        } else {
+            accessController::log_pageview("mrm_lib", "page_{$page}");
         }
 
         $sql = "SELECT 
