@@ -82,7 +82,7 @@ class App {
      * @uses view
      * @method get
      * 
-     * @rate 30/min,500/hour,2000/day
+     * @rate 30/min,300/hour,1000/day
     */
     public function plant_np($page=1) {
         include_once APP_PATH . "/scripts/mzvault/np.php";
@@ -96,7 +96,7 @@ class App {
      * @uses view
      * @method get
      * 
-     * @rate 30/min,500/hour,2000/day
+     * @rate 30/min,300/hour,1000/day
     */
     public function microbial_np($page=1) {
         include_once APP_PATH . "/scripts/mzvault/np.php";
@@ -110,7 +110,7 @@ class App {
      * @uses view
      * @method get
      * 
-     * @rate 30/min,500/hour,2000/day
+     * @rate 30/min,300/hour,1000/day
     */
     public function marine_np($page=1) {
         include_once APP_PATH . "/scripts/mzvault/np.php";
