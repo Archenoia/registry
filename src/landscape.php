@@ -25,13 +25,13 @@ class App {
     }
 
     /**
-     * Natural Product Library
+     * Metabolite Spectrum Library
      * 
      * @access *
      * @uses view
     */
-    public function metabolite_spectrum($page=1) {
+    public function metabolite_spectrum($q1=null,$q3=null,$rt=null,$page=1) {
         include_once APP_PATH . "/scripts/mzvault/mrm_lib.php";
-        View::Display(mrm_lib::get_mrm($page));
+        View::Display(mrm_lib::get_mrm($q1,$q3,$rt,$page));
     }
 }
