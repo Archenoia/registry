@@ -23,4 +23,14 @@ class App {
     public function natural_products() {
         View::Display();
     }
+
+    /**
+     * Natural Product Library
+     * 
+     * @access *
+     * @uses view
+    */
+    public function metabolite_spectrum($page=1) {
+        View::Display();
+    }
 }
