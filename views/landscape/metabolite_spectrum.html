@@ -29,7 +29,7 @@
             <!-- Section Title -->
             <div class="container section-title">
                 <h2>Metabolite Spectrum Library</h2>
-                <p>采用广泛MRM方法进行了代谢物参考谱图数据的采集，构建了一个包含有约30万标准品化合物的参考库
+                <p>采用广泛MRM方法进行了代谢物参考谱图数据的采集，构建了一个包含有约14万标准品化合物的参考库
                 </p>
             </div><!-- End Section Title -->
 
@@ -42,8 +42,56 @@
 
 
 
+                    ${../includes/paging.html}
+                    <br />
+                    <br />
+                    <br />
+                    <br />
 
-                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Metabolite</th>
+                                <th>MRM Q1</th>
+                                <th>MRM Q3</th>
+                                <th>RT(minutes)</th>
+                                <th>Adduct</th>
+                                <th>Struct</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <foreach @mrm>
+                                <tr>
+                                    <td>@mrm["name"] (<a href='/spectrum/?metab=@mrm["metab_id"]'>@mrm["metab_id"]</a>)
+                                        <br />
+                                        <p>
+                                            @mrm["note"]
+                                        </p>
+                                    </td>
+                                    <td>@mrm["q1"]</td>
+                                    <td>@mrm["q3"]</td>
+                                    <td>@mrm["rt(min)"]</td>
+                                    <td>@mrm["top_adducts"]</td>
+                                    <td>
+                                        <a href='/metabolite/@mrm["metab_id"]'>
+                                            <canvas class="smiles_drawer card-img-top" role="img" focusable="false"
+                                                style="max-height: 200px; width:150px;" data='@mrm["smiles"]'>
+                                            </canvas>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </foreach>
+                        </tbody>
+                    </table>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    ${../includes/paging.html}
+
+
+
                 </div>
 
             </div>
@@ -57,5 +105,8 @@
 
     ${../includes/footer.html}
 </body>
+
+<script src="/resources/vendor/smiles-drawer.min.js"></script>
+<script src="/resources/js/smiles_batch_render.js"></script>
 
 </html>

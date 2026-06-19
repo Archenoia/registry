@@ -31,6 +31,7 @@ class App {
      * @uses view
     */
     public function metabolite_spectrum($page=1) {
-        View::Display();
+        include_once APP_PATH . "/scripts/mzvault/mrm_lib.php";
+        View::Display(mrm_lib::get_mrm($page));
     }
 }
