@@ -1,7 +1,32 @@
 <?php
 
 class ncbi_taxonomy {
-
+SELECT 
+    mainclass.term AS main_class,
+    subclass.term AS sub_class,
+    trait_name.term AS trait_name,
+    unit,
+    consensus_value,
+    min,
+    median,
+    mean,
+    max,
+    discrete_values,
+    ontology_ids
+FROM
+    cad_registry.organism_traits
+        LEFT JOIN
+    ontology trait_name ON trait_name.id = traits_id
+        LEFT JOIN
+    ontology_relation is_subclass ON is_subclass.term_id = trait_name.id
+        LEFT JOIN
+    ontology subclass ON subclass.id = is_subclass.is_a
+        LEFT JOIN
+    ontology_relation is_mainclass ON is_mainclass.term_id = subclass.id
+        LEFT JOIN
+    ontology mainclass ON mainclass.id = is_mainclass.is_a
+WHERE
+    tax_id = 46125
     public static function taxon_data($id,$page=1,$page_size = 35) {
         $id = Regex::Match($id, "\d+");
         
