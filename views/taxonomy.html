@@ -32,7 +32,7 @@
         <p>taxonomy name: {$name} ({$rank_name})<br />
           chinese name: {$zh_name}<br />
           ancestor: <a href="/taxonomy/?id={$ancestor}">{$parent_name} ({$parent_rank})</a><br />
-          ncbi taxonomy: {$id} <br />
+          ncbi taxonomy: <a href="https://ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={$id}">{$id}</a> <br />
           GTDB taxonomy: {$GTDB_id}
         </p>
 
