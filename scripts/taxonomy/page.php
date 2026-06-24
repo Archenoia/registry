@@ -27,6 +27,7 @@ FROM
     ontology mainclass ON mainclass.id = is_mainclass.is_a
 WHERE
     tax_id = 46125
+ORDER BY main_class , sub_class , trait_name
     public static function taxon_data($id,$page=1,$page_size = 35) {
         $id = Regex::Match($id, "\d+");
         
