@@ -26,6 +26,30 @@
 
       <div class="container">
 
+        ${./includes/paging.html}
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Organism</th>
+              <th>GTDB_id</th>
+              <th>Unit</th>
+              <th>Trait Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <foreach @tax>
+              <tr>
+                <td><a href='/taxonomy/?id=@tax["tax_id"]'>@tax["taxname"]</a></td>
+                <td>@tax["GTDB_id"]</td>
+                <td>@tax["unit"]</td>
+                <td>@tax["value"]</td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+
+        ${./includes/paging.html}
 
 
       </div>
