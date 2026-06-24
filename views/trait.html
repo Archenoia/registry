@@ -32,6 +32,7 @@
           <thead>
             <tr>
               <th>Organism</th>
+              <th>Taxonomy Rank</th>
               <th>GTDB_id</th>
               <th>Unit</th>
               <th>Trait Value</th>
@@ -41,6 +42,7 @@
             <foreach @tax>
               <tr>
                 <td><a href='/taxonomy/?id=@tax["tax_id"]'>@tax["taxname"]</a></td>
+                <td>@tax["rank"]</td>
                 <td>@tax["GTDB_id"]</td>
                 <td>@tax["unit"]</td>
                 <td>@tax["value"]</td>
