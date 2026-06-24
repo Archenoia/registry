@@ -33,6 +33,40 @@ class ncbi_taxonomy {
                 tax_id = {$taxid}
             ORDER BY main_class , sub_class , trait_name;
         ");
+        $traits = array_map(function($t) {
+            $name = "[{$t["main_class"]}/{$t["sub_class"]}] {$t["trait_name"]}";
+            $unit = $t["unit"];
+            $value = $t["consensus_value"];
+
+            if ($value == "NA") {
+                $value = "{$t["mean"]} ({$t["min"]} ~ {$t["max"]})";
+            } else if ($unit != "boolean") {
+                $values = json_decode($t["discrete_values"]);
+                $maxKey = null;
+                $maxValue = -INF; // 初始化为负无穷，确保任何数值都能比它大
+
+                // 2. 遍历数组寻找最大值
+                foreach ($values as$key => $value) {
+                    // 将字符串转换为浮点数进行比较
+                    $numericValue = floatval($value); 
+                    
+                    if ($numericValue >$maxValue) {
+                        $maxValue =$numericValue;
+                        $maxKey =$key;
+                    }
+                }
+
+                $value = $maxKey;
+            }
+
+            return [
+                "id" => $t["traits_id"],
+                "name" => $name,
+                "unit" => $unit,
+                "value" => $value,
+                "terms" => Strings::Join(json_decode($t["ontology_ids"]), ", ")
+            ];
+        }, $traits);
 
         return $traits;
     }
