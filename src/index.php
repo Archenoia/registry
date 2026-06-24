@@ -300,6 +300,17 @@ class App {
     }
 
     /**
+     * @access *
+     * @uses view
+     * 
+     * @rate 30/min,500/hour,2000/day
+    */
+    public function trait($id, $page=1) {
+        include APP_PATH . "/scripts/taxonomy/trait.php";
+        View::Display(trait_data::page_data($id, $page));
+    }
+
+    /**
      * @uses view
      * 
      * @rate 30/min,500/hour,2000/day

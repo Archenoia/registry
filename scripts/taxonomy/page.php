@@ -39,7 +39,13 @@ class ncbi_taxonomy {
             $value = $t["consensus_value"];
 
             if ($value == "NA") {
-                $value = "{$t["mean"]} ({$t["min"]} ~ {$t["max"]})";
+                $value = round(floatval($t["mean"]), 2);
+
+                if ($t["min"] == $t["max"]) {
+                    # do nothing
+                } else {
+                    $value = "{$value} ({$t["min"]} ~ {$t["max"]})";
+                }                
             } else if ($unit != "boolean") {
                 $values = json_decode($t["discrete_values"]);
                 $maxKey = null;
