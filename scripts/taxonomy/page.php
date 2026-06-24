@@ -5,6 +5,7 @@ class ncbi_taxonomy {
     public static function organism_traits($taxid) {
         $traits = new Table(["cad_registry"=>"organism_traits"]);
         $traits = $traits->getDriver()->Fetch("SELECT 
+                traits_id,
                 mainclass.term AS main_class,
                 subclass.term AS sub_class,
                 trait_name.term AS trait_name,
@@ -77,6 +78,7 @@ class ncbi_taxonomy {
         
         $tax["enzyme"] = self::organism_proteins($id, $page, $page_size);
         $tax["metabolite"] = self::organism_metabolites($id);
+        $tax["trait"] = self::organism_traits($id);
 
         return list_nav( $tax,$page);
     }
