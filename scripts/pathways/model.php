@@ -44,7 +44,7 @@ class pathway_model {
                     "GROUP_CONCAT(DISTINCT `db_xref`) AS ecs",
         "ncbi_taxid",
         "`ncbi_taxonomy`.`name`",
-        "COUNT(DISTINCT db_xref) / {$n} AS ratio"
+        "ROUND(COUNT(DISTINCT db_xref) / {$n}  * 100, 2) AS ratio"
                 ]);
         }
     }
