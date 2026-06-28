@@ -81,24 +81,26 @@
         <br />
         <br />
 
-        <h3>Proteins</h3>
+        <h3>Pathway Source</h3>
 
         <table class="table">
           <thead>
             <tr>
-              <th>Protein ID</th>
-              <th>name</th>
-              <th>full name</th>
+              <th>Organism</th>
+              <th>Taxonomy Group</th>
+              <th>Enzyme List</th>
+              <th>Source Ratio</th>
             </tr>
           </thead>
           <tbody>
-            <foreach @prot>
+            <foreach @org>
               <tr>
                 <td>
-                  <a href='/protein/fasta/?id=@prot["id"]'>@prot["uniprot_id"]</a>
+                  <a href='/taxonomy/?id=@org["ncbi_taxid"]'>@org["name"]</a>
                 </td>
-                <td>@prot["name"]</td>
-                <td>@prot["function"]</td>
+                <td>@org["tax_group"]</td>
+                <td>@org["ecs"]</td>
+                <td>@org["ratio"]%</td>
               </tr>
             </foreach>
           </tbody>
