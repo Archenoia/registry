@@ -19,13 +19,33 @@ class pathway_model {
             ->where(["class_id"=> EC_NUMBER, "pathway_id"=> $id])
             ->select(["`enzyme`.*", "symbol_id as ec_number"])
             ;
-        $pwy["prot"] =  (new Table(["cad_registry"=>"pathway_network"]))
-            ->left_join("protein_data")
-            ->on(["protein_data"=>"id","pathway_network"=>"model_id"])
-            ->where(["class_id" => FASTA_PROTEIN, "model_id" => gt(0), "pathway_id"=>$id])
-            ->select(["symbol_id AS uniprot_id", "name", "`function`", "`protein_data`.id"])
-            ;
+        $pwy["org"] = self::pathway_ratio(array_column($pwy["enzyme"], "ec_number"));
 
         return $pwy;
+    }
+
+    private static function pathway_ratio($ecs) {
+        $ecs = array_unique($ecs);
+        $n = count($ecs);
+
+        if ($n == 0) {
+            return [];
+        } else {
+            return (new Table(["cad_registry"=>"db_xrefs"]))
+                ->left_join("protein_data")->on(["protein_data"=>"id","db_xrefs"=>"obj_id"])
+                ->left_join("ncbi_taxonomy")->on(["ncbi_taxonomy"=>"id","protein_data"=>"ncbi_taxid"])
+                ->where([
+                    "type" => FASTA_PROTEIN,
+                    "db_xref" => in($ecs)
+                ])
+                ->group_by(["ncbi_taxid", "`ncbi_taxonomy`.name"])
+                ->order_by("ratio", true)
+                ->select([
+                    "GROUP_CONCAT(DISTINCT `db_xref`) AS ecs",
+        "ncbi_taxid",
+        "`ncbi_taxonomy`.`name`",
+        "COUNT(DISTINCT db_xref) / {$n} AS ratio"
+                ]);
+        }
     }
 }
