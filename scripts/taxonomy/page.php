@@ -152,7 +152,7 @@ class ncbi_taxonomy {
         return (new Table(["cad_registry"=>"protein_data"]))->exec($sql);
     }
 
-    public static function organism_metabolites($taxid, $page = 1, $page_size = 100) {
+    public static function organism_metabolites($taxid, $page = 1, $page_size = 20) {
         $offset = ($page -1) * $page_size;
 
         return (new Table(["cad_registry"=>"organism_source"]))
