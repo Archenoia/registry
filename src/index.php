@@ -380,8 +380,8 @@ class App {
      * 
      * @rate 30/min,500/hour,2000/day
     */
-    public function search($q, $page = 1) {
-        View::Display((include APP_PATH . "/scripts/search.php")->get_result(urldecode($q), $page));
+    public function search($q, $type="*", $page = 1) {
+        View::Display((include APP_PATH . "/scripts/search.php")->get_result(urldecode($q), $type, $page));
     }
 
     /**

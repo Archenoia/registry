@@ -2,7 +2,7 @@
 
 class search {
 
-    public function get_result($q, $page = 1) {
+    public function get_result($q, $type="*", $page = 1) {
         $referer = $_SERVER['HTTP_REFERER'];
         $referer = Utils::isDbNull($referer) ? null : URL::mb_parse_url ( $referer );
 
@@ -13,7 +13,7 @@ class search {
         if (!Utils::isDbNull($referer)) {
             return self::local_search(trim($referer["path"], "/"), $q, $page);
         } else {
-            return self::global_search($q, $page);
+            return self::global_search($q, $type, $page);
         } 
     }
 
@@ -40,9 +40,9 @@ class search {
         }     
     }
 
-    private static function global_search($q, $page = 1) {
+    private static function global_search($q, $type, $page = 1) {
         include_once APP_PATH . "/scripts/dbsearch.php";
-        $result = portal::db_search($q, $page);
+        $result = portal::db_search($q, $type, $page);
         $result["title"] = "Search Result of '{$q}'";
         return $result;   
     }

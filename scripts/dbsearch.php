@@ -26,7 +26,7 @@ class portal {
         'reaction'   => ['url' => '/reaction/?id=%s', 'color' => 'danger'],
     ];
 
-    public static function db_search($q, $page = 1, $page_size = 50) {
+    public static function db_search($q, $type_filter, $page = 1, $page_size = 50) {
         $q = Table::make_fulltext_strips($q);
         $offset = ($page - 1) * $page_size;
 
@@ -35,6 +35,10 @@ class portal {
         // 动态生成所有 SQL 查询
         $sqlParts = [];
         foreach (self::$searchSchema as $type => $config) {
+            if ($type_filter !== "*" && $type_filter !== $type) {
+                continue; // 如果指定了类型且不匹配，则跳过
+            }
+            
             $sqlParts[] = "(SELECT id, {$config['name_col']} AS name, 
                     MATCH ({$config['match_cols']}) AGAINST ('{$q}' IN BOOLEAN MODE) AS score, 
                     '{$type}' AS type 
