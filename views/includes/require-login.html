@@ -20,9 +20,10 @@
   <!-- 主卡片 -->
   <div class="lock-card">
     <div class="lock-ico" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent);">
-        <rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/>
-        <path d="M7.5 10.5V7.5a4.5 4.5 0 0 1 9 0v3"/>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+        stroke-linejoin="round" style="color:var(--accent);">
+        <rect x="4.5" y="10.5" width="15" height="10" rx="2.2" />
+        <path d="M7.5 10.5V7.5a4.5 4.5 0 0 1 9 0v3" />
       </svg>
     </div>
 
@@ -32,15 +33,16 @@
       请使用您的邮箱登录后继续查看。
     </p>
 
-    <form onsubmit="event.preventDefault();const b=this.querySelector('.submit');b.textContent='正在发送登录链接…';b.disabled=true;setTimeout(()=>{b.textContent='✓ 已发送，请查收邮箱';},900);">
+    <form>
       <div class="field">
-        <input type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="5" width="18" height="14" rx="2"/>
-          <path d="m3 7 9 6 9-6"/>
+        <a href="/login"> <input type="email" name="email" placeholder="you@example.com" readonly required></a>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="m3 7 9 6 9-6" />
         </svg>
       </div>
-      <button class="submit" type="submit">使用邮箱继续</button>
+      <a class="btn btn-primary" role="button" href="/login/">使用邮箱继续</a>
     </form>
 
     <p class="hint">
