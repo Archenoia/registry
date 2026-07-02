@@ -8,11 +8,15 @@ namespace pages {
             return "taxonomy_data";
         }
 
-        taxid() {
+        static taxid() {
             return $ts.location("id");
         }
 
         protected init(): void {
+
+        }
+
+        public static loadMetaboliteData() {
             $ts.get(`${url_organism_source}?taxid=${this.taxid()}`, msg => {
                 if (msg.code == 0) {
                     let data = $from(<metabolite_sources[]>msg.info).Select(a => {

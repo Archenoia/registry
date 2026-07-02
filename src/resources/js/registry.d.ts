@@ -95,8 +95,9 @@ declare namespace pages {
 declare namespace pages {
     class taxonomy_data extends Bootstrap {
         get appName(): string;
-        taxid(): string;
+        static taxid(): string;
         protected init(): void;
+        static loadMetaboliteData(): void;
     }
     interface metabolite_sources {
         id: number;

@@ -3,10 +3,10 @@
 <html lang="en">
 
 <head>
-  <meta name="app" content="taxonomy_data">
   <meta name="drawer-h" content="125">
 
   ${./includes/head.html}
+  <link rel="stylesheet" href="/resources/css/require-login.css">
 </head>
 
 <body class="index-page scrolled">
@@ -105,61 +105,92 @@
 
         ${./includes/paging.html}
 
-        <h3 id="metabolites">Metabolites</h3>
+        <br />
 
-        <h5>LCMS Experimental Annotations</h5>
+        <h3 id="metabolites">Metabolites Taxonomy Source</h3>
 
-        <div class="row">
-          <div class="col" id="metab-source">
+        <p>
+          Creating taxonomically-informed metabolome libraries
+        </p>
+
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+              type="button" role="tab" aria-controls="nav-home" aria-selected="true">Literature Annotations</button>
+            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
+              type="button" role="tab" aria-controls="nav-profile" aria-selected="false">LCMS Experimental
+              Annotations</button>
 
           </div>
-        </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 
-        <h5>Literature Annotations</h5>
+            <div class="row">
+              <div class="col">
 
-        <div class="row">
-          <div class="col">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Metabolite</th>
-                  <th>Database Reference</th>
-                  <th>Structure</th>
-                </tr>
+                <br />
+                <div class="alert alert-light" role="alert">
+                  基于公共数据库中的注释，以及文献文本挖掘得到的当前生物物种所能够代谢合成的代谢物列表：
+                </div>
+                <br />
 
-              </thead>
-              <tbody>
-                <foreach @metabolite>
-                  <tr>
-                    <td><strong><a href='/metabolite/@metabolite["id"]'>@metabolite["name"]</a></strong><br /><br />
-                      <strong>Formula:</strong> <i><a
-                          href='/metabolites/?formula=@metabolite["formula"]'>@metabolite["formula"]</a></i><br />
-                      <strong>Exact Mass:</strong> <i><a
-                          href='/metabolites/?exact_mass=@metabolite["exact_mass"]'>@metabolite["exact_mass"]</a></i><br />
-                      <strong>Source ID:</strong> <i>@metabolite["evidence"]</i>
-                    </td>
-                    <td>
-                      <ul>
-                        <li>CAS Registry: @metabolite["cas_id"]</li>
-                        <li>KEGG: @metabolite["kegg_id"]</li>
-                        <li>LipidMAPS: @metabolite["lipidmaps_id"]</li>
-                        <li>BioCYC: @metabolite["biocyc"]</li>
-                      </ul>
-                    </td>
-                    <td>
-                      <canvas class="smiles_drawer" role="img" focusable="false" style="float:right;"
-                        data='@metabolite["smiles"]'>
-                    </td>
-                  </tr>
-                </foreach>
-              </tbody>
-            </table>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Metabolite</th>
+                      <th>Database Reference</th>
+                      <th>Structure</th>
+                    </tr>
 
-            <a href="/taxonomy_source/?id={$id}" class="explore-link">
-              View All Metabolites <i class="bi bi-arrow-up-right"></i>
-            </a>
+                  </thead>
+                  <tbody>
+                    <foreach @metabolite>
+                      <tr>
+                        <td><strong><a href='/metabolite/@metabolite["id"]'>@metabolite["name"]</a></strong><br /><br />
+                          <strong>Formula:</strong> <i><a
+                              href='/metabolites/?formula=@metabolite["formula"]'>@metabolite["formula"]</a></i><br />
+                          <strong>Exact Mass:</strong> <i><a
+                              href='/metabolites/?exact_mass=@metabolite["exact_mass"]'>@metabolite["exact_mass"]</a></i><br />
+                          <strong>Source ID:</strong> <i>@metabolite["evidence"]</i>
+                        </td>
+                        <td>
+                          <ul>
+                            <li>CAS Registry: @metabolite["cas_id"]</li>
+                            <li>KEGG: @metabolite["kegg_id"]</li>
+                            <li>LipidMAPS: @metabolite["lipidmaps_id"]</li>
+                            <li>BioCYC: @metabolite["biocyc"]</li>
+                          </ul>
+                        </td>
+                        <td>
+                          <canvas class="smiles_drawer" role="img" focusable="false" style="float:right;"
+                            data='@metabolite["smiles"]'>
+                        </td>
+                      </tr>
+                    </foreach>
+                  </tbody>
+                </table>
+
+                <a href="/taxonomy_source/?id={$id}" class="explore-link" style="font-size: large;">
+                  View All Metabolites <i class="bi bi-arrow-up-right"></i>
+                </a>
+              </div>
+            </div>
           </div>
+          <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+
+            <div class="row">
+              <div class="col" id="metab-source">
+                <br />
+                ${includes/require-login.html}
+              </div>
+            </div>
+
+          </div>
+
         </div>
+
+
       </div>
 
     </section>
@@ -172,5 +203,7 @@
 
 <script src="/resources/vendor/smiles-drawer.min.js"></script>
 <script src="/resources/js/smiles_batch_render.js"></script>
+
+<script type="text/javascript">pages.taxonomy_data.loadMetaboliteData();</script>
 
 </html>

@@ -687,10 +687,12 @@ var pages;
             enumerable: false,
             configurable: true
         });
-        taxonomy_data.prototype.taxid = function () {
+        taxonomy_data.taxid = function () {
             return $ts.location("id");
         };
         taxonomy_data.prototype.init = function () {
+        };
+        taxonomy_data.loadMetaboliteData = function () {
             $ts.get("".concat(url_organism_source, "?taxid=").concat(this.taxid()), function (msg) {
                 if (msg.code == 0) {
                     var data_3 = $from(msg.info).Select(function (a) {
