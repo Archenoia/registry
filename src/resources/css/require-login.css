@@ -1,0 +1,360 @@
+.auth-placeholder {
+  /* 直接引用全局主题色，跟随 :root 变化 */
+  --accent: var(--accent-color, #5c99ee);
+  --fg: var(--heading-color, #344761);
+  --muted: var(--default-color, #535d6b);
+  --bg: var(--background-color, #ffffff);
+  --surface: var(--surface-color, #ffffff);
+  --contrast: var(--contrast-color, #ffffff);
+  /* 组件私有派生色 */
+  --accent-2: #4a87d4;
+  --accent-2: color-mix(in srgb, var(--accent) 80%, #1a2a40);
+  --bg-soft: #f4f6fa;
+  --bg-soft-2: #eaeef5;
+  --muted-2: #8a93a3;
+  --border: color-mix(in srgb, var(--accent) 22%, transparent);
+  --border-hi: color-mix(in srgb, var(--accent) 55%, transparent);
+
+  position: relative;
+  width: 100%;
+  min-height: 520px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    var(--bg) 0%,
+    var(--bg-soft-2) 48%,
+    var(--bg-soft) 100%
+  );
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  color: var(--fg);
+  isolation: isolate;
+  box-shadow:
+    0 30px 80px -30px rgba(52, 71, 97, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* 背景层：模拟"被隐藏的真实内容" */
+.auth-placeholder .ghost {
+  position: absolute;
+  inset: -5%;
+  z-index: 0;
+  filter: blur(13px) saturate(0.7);
+  opacity: 0.55;
+  transform: scale(1.05);
+  animation: drift 26s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+.auth-placeholder .ghost-row {
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #d8dde6, #c3cad6, #e4e8ee);
+  margin: 0 0 14px;
+}
+.auth-placeholder .ghost-row.w-90 {
+  width: 90%;
+}
+.auth-placeholder .ghost-row.w-70 {
+  width: 70%;
+}
+.auth-placeholder .ghost-row.w-50 {
+  width: 50%;
+}
+.auth-placeholder .ghost-row.w-40 {
+  width: 40%;
+}
+.auth-placeholder .ghost-title {
+  height: 34px;
+  width: 60%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #b8c4d4, #9aa9bc);
+  margin: 0 0 22px;
+}
+.auth-placeholder .ghost-media {
+  height: 160px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #dde2ea, #c7cfdb, #e8ebf0);
+  margin: 0 0 18px;
+}
+.auth-placeholder .ghost-inner {
+  padding: 46px 52px;
+  max-width: 760px;
+}
+
+@keyframes drift {
+  0% {
+    transform: translate(0, 0) scale(1.05);
+  }
+  100% {
+    transform: translate(-1.5%, 1.5%) scale(1.08);
+  }
+}
+
+/* 柔光遮罩，让中心卡片更突出（浅色版） */
+.auth-placeholder .scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(
+      ellipse 55% 60% at 50% 50%,
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(244, 246, 250, 0.75) 70%,
+      rgba(244, 246, 250, 0.95) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(244, 246, 250, 0.5) 100%
+    );
+  pointer-events: none;
+}
+
+/* 主卡片 */
+.auth-placeholder .lock-card {
+  position: relative;
+  z-index: 2;
+  max-width: 440px;
+  margin: 48px auto;
+  padding: 40px 36px 32px;
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  backdrop-filter: blur(22px) saturate(1.25);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 30px 60px -20px rgba(52, 71, 97, 0.18),
+    0 0 0 1px color-mix(in srgb, var(--accent) 6%, transparent);
+  text-align: center;
+}
+.auth-placeholder .lock-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 35%, transparent),
+    transparent 30%,
+    transparent 70%,
+    color-mix(in srgb, var(--accent-2) 25%, transparent)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1px;
+  pointer-events: none;
+}
+
+/* 锁图标 */
+.auth-placeholder .lock-ico {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, #ffffff, #eaf1fb);
+  border: 1px solid var(--border-hi);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 8px color-mix(in srgb, var(--accent) 6%, transparent),
+    0 8px 24px -8px color-mix(in srgb, var(--accent) 35%, transparent);
+  position: relative;
+}
+.auth-placeholder .lock-ico svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+.auth-placeholder .lock-ico::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateY(8px);
+  box-shadow: 0 0 12px var(--accent);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translate(-50%, -50%) translateY(8px) scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(8px) scale(1.15);
+  }
+}
+
+/* 文案 */
+.auth-placeholder h2 {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+  color: var(--fg);
+}
+.auth-placeholder h2 em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--accent);
+}
+.auth-placeholder .sub {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted);
+  margin: 0 0 26px;
+}
+.auth-placeholder .sub b {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+/* 表单 */
+.auth-placeholder .field {
+  position: relative;
+  margin-bottom: 12px;
+}
+.auth-placeholder .field input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px 13px 40px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+}
+.auth-placeholder .field input::placeholder {
+  color: var(--muted-2);
+}
+.auth-placeholder .field input:focus {
+  border-color: var(--border-hi);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.auth-placeholder .field .ico {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--muted);
+  pointer-events: none;
+  transition: color 0.2s;
+}
+.auth-placeholder .field input:focus + .ico {
+  color: var(--accent);
+}
+
+.auth-placeholder .submit {
+  width: 100%;
+  padding: 13px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  color: var(--contrast);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    transform 0.15s,
+    box-shadow 0.2s,
+    filter 0.2s;
+  box-shadow:
+    0 8px 24px -8px color-mix(in srgb, var(--accent) 50%, transparent),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+.auth-placeholder .submit:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow:
+    0 12px 30px -8px color-mix(in srgb, var(--accent) 65%, transparent),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+}
+.auth-placeholder .submit:active {
+  transform: translateY(0);
+}
+
+.auth-placeholder .hint {
+  margin: 18px 0 0;
+  font-size: 12.5px;
+  color: var(--muted-2);
+  line-height: 1.5;
+}
+.auth-placeholder .hint a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  padding-bottom: 1px;
+}
+.auth-placeholder .hint a:hover {
+  border-color: var(--accent);
+}
+
+/* 角标 */
+.auth-placeholder .badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.auth-placeholder .badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+@media (max-width: 520px) {
+  .auth-placeholder .lock-card {
+    margin: 24px 14px;
+    padding: 32px 22px 26px;
+  }
+  .auth-placeholder h2 {
+    font-size: 24px;
+  }
+  .auth-placeholder .ghost-inner {
+    padding: 30px 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-placeholder .ghost,
+  .auth-placeholder .lock-ico::after {
+    animation: none;
+  }
+}

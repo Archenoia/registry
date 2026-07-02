@@ -10,6 +10,7 @@
   <script id="smiles" type="plain/text">{$smiles}</script>
 
   <script type="text/javascript" src="/resources/vendor/echarts-6.0.0/echarts.min.js"></script>
+  <link rel="stylesheet" href="/resources/css/require-login.css">
 </head>
 
 <body class="index-page scrolled">
@@ -56,40 +57,39 @@
               {$synonyms}
 
               <!-- <div class="alert alert-light" role="alert"> -->
-                <section data-identity="medical-review-disclaimer"
-                  class="py-rem32px border-y border-gray-400 mt-rem32px"
-                  style="padding-top: 2rem;
+              <section data-identity="medical-review-disclaimer" class="py-rem32px border-y border-gray-400 mt-rem32px"
+                style="padding-top: 2rem;
               padding-bottom: 2rem;border-color: #e6e6e6;border-bottom-width: 1px;border-top-width: 1px;margin-top: 2rem; display:{$display}">
-                  <div data-identity="medically-reviewed-badge"
-                    class="text-rem13px leading-rem22px font-medium pr-rem12px pl-rem4px rounded-[22px] bg-paleGreen-050 text-forestGreen-500 w-fit mb-rem8px ml-[-4px]"
-                    style="color: #1b7638;line-height: 1.375rem;font-weight: 500;font-size: .8125rem;padding-right: .75rem;padding-left: .25rem;background-color: #e6f2e5;border-radius: 22px;
+                <div data-identity="medically-reviewed-badge"
+                  class="text-rem13px leading-rem22px font-medium pr-rem12px pl-rem4px rounded-[22px] bg-paleGreen-050 text-forestGreen-500 w-fit mb-rem8px ml-[-4px]"
+                  style="color: #1b7638;line-height: 1.375rem;font-weight: 500;font-size: .8125rem;padding-right: .75rem;padding-left: .25rem;background-color: #e6f2e5;border-radius: 22px;
                       width: fit-content;margin-left: -4px;margin-bottom: .5rem;">
-                    <svg width="16" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"
-                      class="inline mr-rem4px my-rem4px" style="display: inline;margin-right: .25rem;margin-top: .25rem;
+                  <svg width="16" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    class="inline mr-rem4px my-rem4px" style="display: inline;margin-right: .25rem;margin-top: .25rem;
                           margin-bottom: .25rem;vertical-align: middle;">
-                      <circle cx="7.5" cy="7.5" r="7.5" fill="#ffffff"></circle>
-                      <path
-                        d="M6.45 10.95L11.7375 5.6625L10.6875 4.6125L6.45 8.85L4.3125 6.7125L3.2625 7.7625L6.45 10.95ZM7.5 15C6.4625 15 5.4875 14.803 4.575 14.409C3.6625 14.0155 2.86875 13.4813 2.19375 12.8063C1.51875 12.1313 0.9845 11.3375 0.591 10.425C0.197 9.5125 0 8.5375 0 7.5C0 6.4625 0.197 5.4875 0.591 4.575C0.9845 3.6625 1.51875 2.86875 2.19375 2.19375C2.86875 1.51875 3.6625 0.98425 4.575 0.59025C5.4875 0.19675 6.4625 0 7.5 0C8.5375 0 9.5125 0.19675 10.425 0.59025C11.3375 0.98425 12.1313 1.51875 12.8063 2.19375C13.4813 2.86875 14.0155 3.6625 14.409 4.575C14.803 5.4875 15 6.4625 15 7.5C15 8.5375 14.803 9.5125 14.409 10.425C14.0155 11.3375 13.4813 12.1313 12.8063 12.8063C12.1313 13.4813 11.3375 14.0155 10.425 14.409C9.5125 14.803 8.5375 15 7.5 15Z"
-                        fill="#1b7638"></path>
-                    </svg>
-                    <div class="inline-block align-[-1px]" style="vertical-align: -1px;    display: inline-block;">
-                      Reviewed</div>
-                  </div>
-                  <p data-identity="main-disclaimer-text" class="text-rem19px leading-rem23px text-gray-900 font-bold">
-                    Last reviewed
-                    on {$reviewed_time}.</p>
-                  <p>
-                    <strong><i>Cite this Page</i></strong>
-                    <br />
-                    <br />
-                    <i>{$name}</i>. 数据之源，洞见之始. SMRUCC genomics institute, a synthetic life researcher from China.
-                    <a
-                      href="https://biocad_registry.innovation.ac.cn/s/{$symbol}">https://biocad_registry.innovation.ac.cn/s/{$symbol}</a>
-                    (retrieved
-                    {$now_date}) (CAD Registry RN: {$id}). Licensed
-                    under the Attribution-Noncommercial 4.0 International License (CC BY-NC 4.0).
-                  </p>
-                </section>
+                    <circle cx="7.5" cy="7.5" r="7.5" fill="#ffffff"></circle>
+                    <path
+                      d="M6.45 10.95L11.7375 5.6625L10.6875 4.6125L6.45 8.85L4.3125 6.7125L3.2625 7.7625L6.45 10.95ZM7.5 15C6.4625 15 5.4875 14.803 4.575 14.409C3.6625 14.0155 2.86875 13.4813 2.19375 12.8063C1.51875 12.1313 0.9845 11.3375 0.591 10.425C0.197 9.5125 0 8.5375 0 7.5C0 6.4625 0.197 5.4875 0.591 4.575C0.9845 3.6625 1.51875 2.86875 2.19375 2.19375C2.86875 1.51875 3.6625 0.98425 4.575 0.59025C5.4875 0.19675 6.4625 0 7.5 0C8.5375 0 9.5125 0.19675 10.425 0.59025C11.3375 0.98425 12.1313 1.51875 12.8063 2.19375C13.4813 2.86875 14.0155 3.6625 14.409 4.575C14.803 5.4875 15 6.4625 15 7.5C15 8.5375 14.803 9.5125 14.409 10.425C14.0155 11.3375 13.4813 12.1313 12.8063 12.8063C12.1313 13.4813 11.3375 14.0155 10.425 14.409C9.5125 14.803 8.5375 15 7.5 15Z"
+                      fill="#1b7638"></path>
+                  </svg>
+                  <div class="inline-block align-[-1px]" style="vertical-align: -1px;    display: inline-block;">
+                    Reviewed</div>
+                </div>
+                <p data-identity="main-disclaimer-text" class="text-rem19px leading-rem23px text-gray-900 font-bold">
+                  Last reviewed
+                  on {$reviewed_time}.</p>
+                <p>
+                  <strong><i>Cite this Page</i></strong>
+                  <br />
+                  <br />
+                  <i>{$name}</i>. 数据之源，洞见之始. SMRUCC genomics institute, a synthetic life researcher from China.
+                  <a
+                    href="https://biocad_registry.innovation.ac.cn/s/{$symbol}">https://biocad_registry.innovation.ac.cn/s/{$symbol}</a>
+                  (retrieved
+                  {$now_date}) (CAD Registry RN: {$id}). Licensed
+                  under the Attribution-Noncommercial 4.0 International License (CC BY-NC 4.0).
+                </p>
+              </section>
               <!-- </div> -->
 
             </div>
@@ -281,7 +281,7 @@
                     <div class="col">
 
                       <div id="spectrum_list">
-
+                        ${includes/require-login.html}
                       </div>
 
                       <a href="/spectrum/?metab={$id}" class="explore-link">
