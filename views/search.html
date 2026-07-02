@@ -26,6 +26,22 @@
 
       <div class="container">
 
+        <div class="row">
+          <div class="col">
+
+            <foreach @colors>
+              <a href='/search/?q={$q}&type=@colors["type"]' style="color: white; text-decoration: none;"> <span
+                  class='badge rounded-pill text-bg-@colors["color"]'>@colors["name"]</span></a>
+            </foreach>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a style="color: white; text-decoration: none;"
+              href="/search/?q={$q}"><span class="badge bg-light text-danger">Clear Filter</span></a>
+
+            <hr />
+
+          </div>
+        </div>
+
         ${./includes/paging.html}
 
         <br />
@@ -34,7 +50,8 @@
           <foreach @item>
             <li>
               <a href='@item["url"]'>@item["name"]</a> <span class='badge rounded-pill text-bg-@item["bs_color"]'><a
-                  href="#" style="color: white; text-decoration: none;">@item["type"]</a></span><br />
+                  href='/search/?q={$q}&type=@item["type"]'
+                  style="color: white; text-decoration: none;">@item["type"]</a></span><br />
               <blockquote>@item["note"]</blockquote>
             </li>
           </foreach>
