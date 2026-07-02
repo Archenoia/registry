@@ -283,6 +283,17 @@ class App {
      * 
      * @rate 30/min,500/hour,2000/day
     */
+    public function taxonomy_source($id,$page=1) {
+        include APP_PATH . "/scripts/taxonomy/page.php";
+        View::Display(ncbi_taxonomy::taxon_source_page($id,$page));
+    }
+
+    /**
+     * @access *
+     * @uses view
+     * 
+     * @rate 30/min,500/hour,2000/day
+    */
     public function taxonomy_root() {
         include APP_PATH . "/scripts/taxonomy/page.php";
         View::Display(ncbi_taxonomy::taxon_data("1",1));

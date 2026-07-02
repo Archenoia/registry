@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta name="drawer-h" content="125">
+
+    ${./includes/head.html}
+</head>
+
+<body class="index-page scrolled">
+    ${./includes/nav.html}
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <main class="main">
+
+        <section id="data" class="section">
+
+            <!-- Section Title -->
+            <div class="container section-title">
+                <h2>{$name} ({$rank_name})</h2>
+                <p>all metabolites associated with this taxon: {$name} ({$rank_name})</p>
+            </div><!-- End Section Title -->
+
+            <div class="container">
+
+                <h3>Literature Annotations Text Mining</h3>
+
+                <br />
+                <div class="row">
+                    <div class="col">
+                        <a href="/taxonomy/?id={$id}" style="font-size: large;">
+                            <i class="bi bi-arrow-90deg-left"></i> Back to Taxonomy Page</a>
+                    </div>
+                </div>
+                <hr />
+                <br />
+                <br />
+                ${./includes/paging.html}
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Metabolite</th>
+                            <th>Database Reference</th>
+                            <th>Structure</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        <foreach @metabolite>
+                            <tr>
+                                <td><strong><a
+                                            href='/metabolite/@metabolite["id"]'>@metabolite["name"]</a></strong><br /><br />
+                                    <strong>Formula:</strong> <i><a
+                                            href='/metabolites/?formula=@metabolite["formula"]'>@metabolite["formula"]</a></i><br />
+                                    <strong>Exact Mass:</strong> <i><a
+                                            href='/metabolites/?exact_mass=@metabolite["exact_mass"]'>@metabolite["exact_mass"]</a></i><br />
+                                    <strong>Source ID:</strong> <i>@metabolite["evidence"]</i>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>CAS Registry: @metabolite["cas_id"]</li>
+                                        <li>KEGG: @metabolite["kegg_id"]</li>
+                                        <li>LipidMAPS: @metabolite["lipidmaps_id"]</li>
+                                        <li>BioCYC: @metabolite["biocyc"]</li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <canvas class="smiles_drawer" role="img" focusable="false" style="float:right;"
+                                        data='@metabolite["smiles"]'>
+                                </td>
+                            </tr>
+                        </foreach>
+                    </tbody>
+                </table>
+
+                ${./includes/paging.html}
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+    ${./includes/footer.html}
+</body>
+
+<script src="/resources/vendor/smiles-drawer.min.js"></script>
+<script src="/resources/js/smiles_batch_render.js"></script>
+
+</html>

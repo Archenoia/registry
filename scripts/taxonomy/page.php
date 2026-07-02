@@ -77,6 +77,27 @@ class ncbi_taxonomy {
         return $traits;
     }
 
+    public static function taxon_source_page($id,$page=1,$page_size = 30) {
+        $id = Regex::Match($id, "\d+");
+        
+        if (strlen($id) == 0) {
+            RFC7231Error::err400("invalid taxonomy id parameter!");
+        } else {
+            accessController::log_pageview("taxonomy_source", $id);
+        }
+
+        $tax = self::find_tax($id);
+
+        if (Utils::isDbNull($tax)) {
+            RFC7231Error::err404("Taxonomy data could not be found which is associated with ncbi taxid: $id");
+        }
+
+        $tax["title"] = "{$tax["name"]} ({$tax["rank_name"]})";
+        $tax["metabolite"] = self::organism_metabolites($id, $page, $page_size);
+
+        return list_nav( $tax,$page);
+    }
+
     public static function taxon_data($id,$page=1,$page_size = 35) {
         $id = Regex::Match($id, "\d+");
         
@@ -152,7 +173,7 @@ class ncbi_taxonomy {
         return (new Table(["cad_registry"=>"protein_data"]))->exec($sql);
     }
 
-    public static function organism_metabolites($taxid, $page = 1, $page_size = 20) {
+    public static function organism_metabolites($taxid, $page = 1, $page_size = 10) {
         $offset = ($page -1) * $page_size;
 
         return (new Table(["cad_registry"=>"organism_source"]))
