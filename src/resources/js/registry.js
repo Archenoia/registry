@@ -693,21 +693,25 @@ var pages;
         taxonomy_data.prototype.init = function () {
         };
         taxonomy_data.loadMetaboliteData = function () {
+            $ts("#metab-source").display("\n<br />\n<br />\n<div class=\"d-flex justify-content-center\">\n  <div class=\"spinner-border\" role=\"status\">\n    <span class=\"visually-hidden\">Loading...</span>\n  </div>\n</div>\n<br />\n");
             $ts.get("".concat(url_organism_source, "?taxid=").concat(this.taxid()), function (msg) {
                 if (msg.code == 0) {
-                    var data_3 = $from(msg.info).Select(function (a) {
-                        return {
-                            "ID": "<a href=\"/metabolite/".concat(a.id, "\">").concat(a.id, "</a>"),
-                            "Name": "<a href=\"/spectrum/?metab=".concat(a.id, "\">").concat(a.name, "</a>"),
-                            "Formula": a.formula,
-                            "Exact Mass": a.exact_mass,
-                            "Hits": a.size
-                        };
-                    });
-                    $ts("#metab-source").clear();
-                    $ts.appendTable(data_3, "#metab-source", null, { class: "table" });
+                    taxonomy_data.showTable(msg.info);
                 }
             });
+        };
+        taxonomy_data.showTable = function (tbl) {
+            var data = $from(tbl).Select(function (a) {
+                return {
+                    "ID": "<a href=\"/metabolite/".concat(a.id, "\">").concat(a.id, "</a>"),
+                    "Name": "<a href=\"/spectrum/?metab=".concat(a.id, "\">").concat(a.name, "</a>"),
+                    "Formula": a.formula,
+                    "Exact Mass": a.exact_mass,
+                    "Hits": a.size
+                };
+            });
+            $ts("#metab-source").clear();
+            $ts.appendTable(data, "#metab-source", null, { class: "table" });
         };
         return taxonomy_data;
     }(Bootstrap));

@@ -98,6 +98,7 @@ declare namespace pages {
         static taxid(): string;
         protected init(): void;
         static loadMetaboliteData(): void;
+        private static showTable;
     }
     interface metabolite_sources {
         id: number;

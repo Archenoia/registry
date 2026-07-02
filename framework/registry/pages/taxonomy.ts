@@ -17,22 +17,36 @@ namespace pages {
         }
 
         public static loadMetaboliteData() {
+            $ts("#metab-source").display(`
+<br />
+<br />
+<div class="d-flex justify-content-center">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<br />
+`);
             $ts.get(`${url_organism_source}?taxid=${this.taxid()}`, msg => {
                 if (msg.code == 0) {
-                    let data = $from(<metabolite_sources[]>msg.info).Select(a => {
-                        return {
-                            "ID": `<a href="/metabolite/${a.id}">${a.id}</a>`,
-                            "Name": `<a href="/spectrum/?metab=${a.id}">${a.name}</a>`,
-                            "Formula": a.formula,
-                            "Exact Mass": a.exact_mass,
-                            "Hits": a.size
-                        };
-                    });
-
-                    $ts("#metab-source").clear();
-                    $ts.appendTable(data, "#metab-source", null, { class: "table" });
+                    taxonomy_data.showTable(<any>msg.info);
                 }
             });
+        }
+
+        private static showTable(tbl: []) {
+            let data = $from(<metabolite_sources[]>tbl).Select(a => {
+                return {
+                    "ID": `<a href="/metabolite/${a.id}">${a.id}</a>`,
+                    "Name": `<a href="/spectrum/?metab=${a.id}">${a.name}</a>`,
+                    "Formula": a.formula,
+                    "Exact Mass": a.exact_mass,
+                    "Hits": a.size
+                };
+            });
+
+            $ts("#metab-source").clear();
+            $ts.appendTable(data, "#metab-source", null, { class: "table" });
         }
     }
 
