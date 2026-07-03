@@ -974,7 +974,7 @@ var viewer;
                     textStyle: { color: THEME.contrast }, // 白色文字
                     formatter: function (params) {
                         var item = params.data.rawData;
-                        return "\n                        <div style=\"font-weight:bold; color:".concat(THEME.accent, "; margin-bottom:5px;\">").concat(item.name, "</div>\n                        <div>Formula: ").concat(item.formula, "</div>\n                        <div>Adducts: ").concat(item.adducts, "</div>\n                        <div>m/z: <span style=\"color:#00CED1;\">").concat((+item.mz).toFixed(4), "</span></div>\n                        <div>RT: <span style=\"color:#00CED1;\">").concat((+item.rt).toFixed(2), "</span> min</div>\n                        <div>Q3: ").concat((+item.q3).toFixed(4), "</div>\n                        <div>Score: <span style=\"color:#FF6347; font-weight:bold;\">").concat((+item.score).toFixed(4), "</span></div>\n                    ");
+                        return "\n                        <div style=\"font-weight:bold; color:".concat(THEME.accent, "; margin-bottom:5px;\">").concat(item.name, "</div>\n                        <div>Formula: ").concat(item.formula, "</div>\n                        <div>Adducts: ").concat(item.adducts, "</div>\n                        <div>MRM[Q1/Q3]: <span style=\"color:#00CED1;\">").concat((+item.mz).toFixed(4), " / ").concat((+item.q3).toFixed(2), "</span></div>\n                        <div>RT: <span style=\"color:#00CED1;\">").concat((+item.rt).toFixed(2), "</span> <i>min</i></div>\n                        <div>Score: <span style=\"color:#FF6347; font-weight:bold;\">").concat((+item.score).toFixed(4), "</span></div>\n                    ");
                     }
                 },
                 grid: {
@@ -1096,7 +1096,7 @@ var viewer;
                         var metabolitesList = '';
                         for (var i = 0; i < displayCount; i++) {
                             var m = bin.metabolites[i];
-                            metabolitesList += "<div style=\"font-size:12px; color:#D3D3D3;\">\n                            &nbsp;&nbsp;\u2022 ".concat(m.name, " (m/z:").concat((+m.mz).toFixed(2), ", RT: ").concat((+m.rt).toFixed(2), ")\n                        </div>");
+                            metabolitesList += "<div style=\"font-size:12px; color:#D3D3D3;\">\n                            &nbsp;&nbsp;\u2022 ".concat(m.name, "_").concat(m.adducts, " (MRM[Q1/Q3]:").concat((+m.mz).toFixed(2), " / ").concat((+m.q3).toFixed(2), ", RT: ").concat((+m.rt).toFixed(2), " min)\n                        </div>");
                         }
                         if (bin.metabolites.length > displayCount) {
                             metabolitesList += "<div style=\"font-size:12px; color:#A9A9A9;\">&nbsp;&nbsp;... and ".concat(bin.metabolites.length - displayCount, " more</div>");

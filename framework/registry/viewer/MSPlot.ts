@@ -56,9 +56,8 @@ namespace viewer {
                         <div style="font-weight:bold; color:${THEME.accent}; margin-bottom:5px;">${item.name}</div>
                         <div>Formula: ${item.formula}</div>
                         <div>Adducts: ${item.adducts}</div>
-                        <div>m/z: <span style="color:#00CED1;">${(+item.mz).toFixed(4)}</span></div>
-                        <div>RT: <span style="color:#00CED1;">${(+item.rt).toFixed(2)}</span> min</div>
-                        <div>Q3: ${(+item.q3).toFixed(4)}</div>
+                        <div>MRM[Q1/Q3]: <span style="color:#00CED1;">${(+item.mz).toFixed(4)} / ${(+item.q3).toFixed(2)}</span></div>
+                        <div>RT: <span style="color:#00CED1;">${(+item.rt).toFixed(2)}</span> <i>min</i></div>
                         <div>Score: <span style="color:#FF6347; font-weight:bold;">${(+item.score).toFixed(4)}</span></div>
                     `;
                     }
@@ -197,7 +196,7 @@ namespace viewer {
                         for (let i = 0; i < displayCount; i++) {
                             const m = bin.metabolites[i];
                             metabolitesList += `<div style="font-size:12px; color:#D3D3D3;">
-                            &nbsp;&nbsp;• ${m.name} (m/z:${(+m.mz).toFixed(2)}, RT: ${(+m.rt).toFixed(2)})
+                            &nbsp;&nbsp;• ${m.name}_${m.adducts} (MRM[Q1/Q3]:${(+m.mz).toFixed(2)} / ${(+m.q3).toFixed(2)}, RT: ${(+m.rt).toFixed(2)} min)
                         </div>`;
                         }
                         if (bin.metabolites.length > displayCount) {
