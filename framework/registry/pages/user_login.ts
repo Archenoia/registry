@@ -1,5 +1,7 @@
 namespace pages {
 
+    export const url_user_info = "/user/info/";
+
     export class user_login extends Bootstrap {
 
         get appName(): string {

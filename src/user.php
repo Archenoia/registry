@@ -116,6 +116,27 @@ class App {
     }
 
     /**
+     * get current user info
+     * 
+     * @access *
+     * @method get
+    */
+    public function info() {
+        if (!isset($_SESSION["user_id"])) {
+            controller::error("User not logged in!");
+        } else {
+            // 只返回必要信息，避免泄露敏感数据
+            $userInfo = [
+                "id"    => $_SESSION["user_id"],
+                "name"  => $_SESSION["name"],
+                "email" => $_SESSION["email"]
+            ];
+
+            controller::success($userInfo);
+        }
+    }
+
+    /**
      * User Logout
      * 
      * @access *

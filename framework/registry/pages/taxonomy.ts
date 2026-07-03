@@ -17,7 +17,9 @@ namespace pages {
         }
 
         public static loadMetaboliteData() {
-            $ts("#metab-source").display(`
+            $ts.get(`${url_user_info}`, msg => {
+                if (msg.code == 0) {
+                    $ts("#metab-source").display(`
 <br />
 <br />
 <div class="d-flex justify-content-center">
@@ -27,9 +29,13 @@ namespace pages {
 </div>
 <br />
 `);
-            $ts.get(`${url_organism_source}?taxid=${this.taxid()}`, msg => {
-                if (msg.code == 0) {
-                    taxonomy_data.showTable(<any>msg.info);
+                    $ts.get(`${url_organism_source}?taxid=${this.taxid()}`, msg => {
+                        if (msg.code == 0) {
+                            taxonomy_data.showTable(<any>msg.info);
+                        }
+                    });
+                } else {
+                    // do nothing at here
                 }
             });
         }
