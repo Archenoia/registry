@@ -66,7 +66,7 @@ namespace pages {
 </div>`);
             } else {
                 $ts("#metab-source").clear();
-                $ts.appendTable(data, "#metab-source", null, { class: "table" });
+                $ts.appendTable(data, "#metab-source", undefined, { class: "table" });
             }
         }
     }

@@ -18,6 +18,8 @@ namespace viewer {
         }));
     }
 
+    const TOP_N = 9;
+
     export class PieViewer {
 
         public static viz_pie(rawData: SpeciesData, chart_id: string, title: string) {
@@ -28,7 +30,6 @@ namespace viewer {
             originalData.sort((a, b) => b.value - a.value);
 
             // 2. 保留前9个系列，其余合并到 Other
-            const TOP_N = 9;
             let pieData: viewer.PieChartData[] = originalData.slice(0, TOP_N);
 
             if (originalData.length > TOP_N) {

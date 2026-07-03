@@ -22,8 +22,8 @@ class App {
     public function metabolite($id) {
         include APP_PATH . "/scripts/metabolite/page.php";
 
-        $id = metabolite_page::resolve_id($id);
-        $main_id = metabolite_page::resolve_main($id);
+        $id = registry::resolve_id($id);
+        $main_id = registry::resolve_main($id);
 
         if ($main_id > 0) {
             $id = $main_id;
@@ -114,9 +114,10 @@ class App {
      * 
      * @rate 30/min,500/hour,2000/day
     */
-    public function organism_source($taxid) {
+    public function organism_source($taxid, $landscape = false) {
         include APP_PATH . "/scripts/taxonomy/metabolites.php";
-        $data = metabolite::organism_source($taxid, 1, 30);
+        $size = $landscape ? 5000 : 150;        
+        $data = metabolite::organism_source($taxid, 1, $size);
         controller::success($data);
     }
 }

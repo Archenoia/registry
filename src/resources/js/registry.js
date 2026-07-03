@@ -1570,13 +1570,25 @@ var viewer;
         });
     }
     viewer.toPieData = toPieData;
+    var TOP_N = 9;
     var PieViewer = /** @class */ (function () {
         function PieViewer() {
         }
         PieViewer.viz_pie = function (rawData, chart_id, title) {
             // 转换为 ECharts 需要的格式
-            var pieData = viewer.toPieData(rawData);
-            // 计算总和
+            var originalData = viewer.toPieData(rawData);
+            // 1. 按照 value 降序排序
+            originalData.sort(function (a, b) { return b.value - a.value; });
+            // 2. 保留前9个系列，其余合并到 Other
+            var pieData = originalData.slice(0, TOP_N);
+            if (originalData.length > TOP_N) {
+                var otherData = originalData.slice(TOP_N);
+                var otherValue = otherData.reduce(function (sum, item) { return sum + item.value; }, 0);
+                if (otherValue > 0) {
+                    pieData.push({ name: 'Other', value: otherValue });
+                }
+            }
+            // 计算总和 (基于处理后的 pieData 或原始数据均可，总和不变)
             var total = pieData.reduce(function (sum, item) { return sum + item.value; }, 0);
             // ECharts 配置项
             var option = {

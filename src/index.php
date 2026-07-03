@@ -289,6 +289,20 @@ class App {
     }
 
     /**
+     * @uses view
+     * 
+     * @rate 30/min,500/hour,2000/day
+    */
+    public function taxonomy_lcms($id) {
+        include APP_PATH . "/scripts/taxonomy/page.php";
+
+        $data = ncbi_taxonomy::taxon_source_page($id,1,5);
+        unset( $data["metabolite"] );
+
+        View::Display( $data);
+    }
+
+    /**
      * @access *
      * @uses view
      * 
