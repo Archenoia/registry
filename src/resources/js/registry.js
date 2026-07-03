@@ -693,10 +693,18 @@ var pages;
         taxonomy_data.prototype.init = function () {
         };
         taxonomy_data.loadMetaboliteData = function () {
-            $ts("#metab-source").display("\n<br />\n<br />\n<div class=\"d-flex justify-content-center\">\n  <div class=\"spinner-border\" role=\"status\">\n    <span class=\"visually-hidden\">Loading...</span>\n  </div>\n</div>\n<br />\n");
-            $ts.get("".concat(url_organism_source, "?taxid=").concat(this.taxid()), function (msg) {
+            var _this = this;
+            $ts.get("".concat(pages.url_user_info), function (msg) {
                 if (msg.code == 0) {
-                    taxonomy_data.showTable(msg.info);
+                    $ts("#metab-source").display("\n<br />\n<br />\n<div class=\"d-flex justify-content-center\">\n  <div class=\"spinner-border\" role=\"status\">\n    <span class=\"visually-hidden\">Loading...</span>\n  </div>\n</div>\n<br />\n");
+                    $ts.get("".concat(url_organism_source, "?taxid=").concat(_this.taxid()), function (msg) {
+                        if (msg.code == 0) {
+                            taxonomy_data.showTable(msg.info);
+                        }
+                    });
+                }
+                else {
+                    // do nothing at here
                 }
             });
         };
@@ -719,6 +727,7 @@ var pages;
 })(pages || (pages = {}));
 var pages;
 (function (pages) {
+    pages.url_user_info = "/user/info/";
     var user_login = /** @class */ (function (_super) {
         __extends(user_login, _super);
         function user_login() {

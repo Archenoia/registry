@@ -109,6 +109,7 @@ declare namespace pages {
     }
 }
 declare namespace pages {
+    const url_user_info = "/user/info/";
     class user_login extends Bootstrap {
         get appName(): string;
         protected init(): void;
