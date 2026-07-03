@@ -750,7 +750,7 @@ var pages;
                 // TIC 图
                 tic.renderBinnedTICChart(__spreadArray([], myData, true), function (metabolites) {
                     // 处理点击事件，例如显示详细信息
-                    taxonomy_data.showTable(metabolites);
+                    taxonomy_data.showTable(metabolites, 9999);
                 });
             });
         };
@@ -778,8 +778,9 @@ var pages;
                 }
             });
         };
-        taxonomy_data.showTable = function (tbl) {
-            var data = $from(tbl).Take(30).Select(function (a) {
+        taxonomy_data.showTable = function (tbl, max) {
+            if (max === void 0) { max = 50; }
+            var data = $from(tbl).Take(max).Select(function (a) {
                 return {
                     "ID": "<a href=\"/metabolite/".concat(a.id, "\">").concat(a.id, "</a>"),
                     "Name": "<a href=\"/spectrum/?metab=".concat(a.id, "\">").concat(a.name, "</a>"),
@@ -956,11 +957,11 @@ var viewer;
          * x轴: rt (分钟), y轴: mz, 颜色映射: score
          */
         MassSpecVisualizer.prototype.renderScatterHeatmap = function (data) {
-            var scores = data.map(function (d) { return d.score; });
+            var scores = data.map(function (d) { return +d.score; });
             var minScore = Math.min.apply(Math, scores);
             var maxScore = Math.max.apply(Math, scores);
             var seriesData = data.map(function (item) { return ({
-                value: [item.rt, item.mz, item.score],
+                value: [+item.rt, +item.mz, +item.score],
                 rawData: item
             }); });
             var option = {

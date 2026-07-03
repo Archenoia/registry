@@ -33,12 +33,12 @@ namespace viewer {
          * x轴: rt (分钟), y轴: mz, 颜色映射: score
          */
         public renderScatterHeatmap(data: metabolite_sources[]): void {
-            const scores = data.map(d => d.score);
+            const scores = data.map(d => +d.score);
             const minScore = Math.min(...scores);
             const maxScore = Math.max(...scores);
 
             const seriesData = data.map(item => ({
-                value: [item.rt, item.mz, item.score],
+                value: [+item.rt, +item.mz, +item.score],
                 rawData: item
             }));
 

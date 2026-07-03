@@ -25,7 +25,7 @@ namespace pages {
                 // TIC 图
                 tic.renderBinnedTICChart([...myData], (metabolites) => {
                     // 处理点击事件，例如显示详细信息
-                    taxonomy_data.showTable(metabolites);
+                    taxonomy_data.showTable(metabolites, 9999);
                 });
             });
         }
@@ -69,8 +69,8 @@ namespace pages {
             });
         }
 
-        private static showTable(tbl: viewer.metabolite_sources[]) {
-            let data = $from(tbl).Take(30).Select(a => {
+        private static showTable(tbl: viewer.metabolite_sources[], max = 50) {
+            let data = $from(tbl).Take(max).Select(a => {
                 return {
                     "ID": `<a href="/metabolite/${a.id}">${a.id}</a>`,
                     "Name": `<a href="/spectrum/?metab=${a.id}">${a.name}</a>`,
