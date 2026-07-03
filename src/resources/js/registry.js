@@ -702,7 +702,7 @@ var pages;
                             taxonomy_data.showTable(msg.info);
                         }
                         else {
-                            $ts("#metab-source").display("<div class=\"alert alert-danger\" role=\"alert\">\n  Server Error or you have no access to this data.\n</div>");
+                            $ts("#metab-source").display("<div class=\"alert alert-danger d-flex align-items-center\" role=\"alert\">\n  <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Danger:\"><use xlink:href=\"#exclamation-triangle-fill\"/></svg>\n  <div>\n  Server Error or you have no access to this data.\n</div>\n</div>");
                         }
                     });
                 }
@@ -717,8 +717,11 @@ var pages;
                     "ID": "<a href=\"/metabolite/".concat(a.id, "\">").concat(a.id, "</a>"),
                     "Name": "<a href=\"/spectrum/?metab=".concat(a.id, "\">").concat(a.name, "</a>"),
                     "Formula": a.formula,
-                    "Exact Mass": a.exact_mass,
-                    "Hits": a.size
+                    "Adducts": a.adducts,
+                    "M/z": a.mz,
+                    "RT(min)": a.rt,
+                    "Q3": a.q3,
+                    "Score": a.score
                 };
             });
             if (data.Count == 0) {
@@ -865,6 +868,226 @@ var viewer;
         return chart;
     }
     viewer.initChart = initChart;
+})(viewer || (viewer = {}));
+var viewer;
+(function (viewer) {
+    var MassSpecVisualizer = /** @class */ (function () {
+        function MassSpecVisualizer(dom) {
+            this.chartInstance = echarts.init(dom);
+        }
+        /**
+         * 任务 1: mz, rt 散点热图
+         * x轴: rt (分钟), y轴: mz, 颜色映射: score
+         */
+        MassSpecVisualizer.prototype.renderScatterHeatmap = function (data) {
+            // 提取 score 的最小最大值用于视觉映射
+            var scores = data.map(function (d) { return d.score; });
+            var minScore = Math.min.apply(Math, scores);
+            var maxScore = Math.max.apply(Math, scores);
+            // 构造 ECharts 散点数据格式
+            // 为了让 tooltip 能拿到原始数据，我们将原始对象挂载到 data 上
+            var seriesData = data.map(function (item) { return ({
+                value: [item.rt, item.mz, item.score],
+                rawData: item
+            }); });
+            var option = {
+                backgroundColor: '#1e1e2e', // 深色背景更能凸显鲜艳颜色
+                tooltip: {
+                    trigger: 'item',
+                    backgroundColor: 'rgba(50, 50, 50, 0.9)',
+                    borderColor: '#fff',
+                    borderWidth: 1,
+                    textStyle: { color: '#fff' },
+                    formatter: function (params) {
+                        var item = params.data.rawData;
+                        return "\n                        <div style=\"font-weight:bold; color:#FFD700; margin-bottom:5px;\">".concat(item.name, "</div>\n                        <div>Formula: ").concat(item.formula, "</div>\n                        <div>Adducts: ").concat(item.adducts, "</div>\n                        <div>m/z: <span style=\"color:#00FFFF;\">").concat(item.mz.toFixed(4), "</span></div>\n                        <div>RT: <span style=\"color:#00FFFF;\">").concat(item.rt.toFixed(2), "</span> min</div>\n                        <div>Q3: ").concat(item.q3.toFixed(4), "</div>\n                        <div>Score: <span style=\"color:#FF4500; font-weight:bold;\">").concat(item.score.toFixed(4), "</span></div>\n                    ");
+                    }
+                },
+                grid: {
+                    left: '8%',
+                    right: '12%',
+                    bottom: '10%',
+                    top: '10%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+                    name: 'Retention Time (min)',
+                    nameTextStyle: { color: '#fff', fontSize: 14 },
+                    axisLine: { lineStyle: { color: '#ccc' } },
+                    axisLabel: { color: '#ccc' },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'm/z',
+                    nameTextStyle: { color: '#fff', fontSize: 14 },
+                    axisLine: { lineStyle: { color: '#ccc' } },
+                    axisLabel: { color: '#ccc' },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                visualMap: {
+                    min: minScore,
+                    max: maxScore,
+                    dimension: 2, // 映射数据的第三个维度 (index 2)，即 score
+                    calculable: true,
+                    orient: 'vertical',
+                    right: 0,
+                    top: 'center',
+                    textStyle: { color: '#fff' },
+                    // 鲜艳明亮的颜色配色 (从冷色到暖色/亮色)
+                    inRange: {
+                        color: ['#00FFCC', '#00FF00', '#FFFF00', '#FF8000', '#FF0000']
+                    }
+                },
+                series: [
+                    {
+                        type: 'scatter',
+                        data: seriesData,
+                        symbolSize: 8,
+                        itemStyle: {
+                            opacity: 0.9,
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 15,
+                                borderColor: '#fff',
+                                borderWidth: 2
+                            },
+                            scale: 1.5
+                        }
+                    }
+                ]
+            };
+            this.chartInstance.setOption(option, true);
+        };
+        /**
+         * 任务 2: 类似 TIC 图的曲线图
+         * 使用 10 秒钟 (10/60 分钟) 的 rt 窗口对 score 进行总加和
+         */
+        MassSpecVisualizer.prototype.renderBinnedTICChart = function (data) {
+            var windowSizeMin = 10 / 60; // 10秒转换为分钟
+            if (data.length === 0)
+                return;
+            // 按 rt 排序
+            var sortedData = __spreadArray([], data, true).sort(function (a, b) { return a.rt - b.rt; });
+            var minRt = Math.floor(sortedData[0].rt / windowSizeMin) * windowSizeMin;
+            var maxRt = Math.ceil(sortedData[sortedData.length - 1].rt / windowSizeMin) * windowSizeMin;
+            // 构建分箱
+            var bins = [];
+            for (var t = minRt; t < maxRt; t += windowSizeMin) {
+                bins.push({
+                    rtStart: t,
+                    rtEnd: t + windowSizeMin,
+                    totalScore: 0,
+                    metabolites: []
+                });
+            }
+            // 将数据填入分箱
+            sortedData.forEach(function (item) {
+                var binIndex = Math.floor((item.rt - minRt) / windowSizeMin);
+                if (binIndex >= 0 && binIndex < bins.length) {
+                    bins[binIndex].totalScore += item.score;
+                    bins[binIndex].metabolites.push(item);
+                }
+            });
+            // 构造 ECharts 折线图数据
+            var lineData = bins.map(function (bin) { return ({
+                value: [bin.rtStart, bin.totalScore],
+                rawData: bin
+            }); });
+            var option = {
+                backgroundColor: '#1e1e2e',
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(50, 50, 50, 0.9)',
+                    borderColor: '#fff',
+                    borderWidth: 1,
+                    textStyle: { color: '#fff' },
+                    formatter: function (params) {
+                        var bin = params[0].data.rawData;
+                        var timeStr = "".concat(bin.rtStart.toFixed(2), " - ").concat(bin.rtEnd.toFixed(2), " min");
+                        // 提取该窗口内的代谢物信息（限制显示数量防止 tooltip 过长）
+                        var displayCount = Math.min(bin.metabolites.length, 5);
+                        var metabolitesList = '';
+                        for (var i = 0; i < displayCount; i++) {
+                            var m = bin.metabolites[i];
+                            metabolitesList += "<div style=\"font-size:12px; color:#DDD;\">\n                            &nbsp;&nbsp;\u2022 ".concat(m.name, " (MRM(Q1/Q3): ").concat(m.mz.toFixed(4), "/").concat(m.q3.toFixed(2), ", RT: ").concat(m.rt.toFixed(2), "min)\n                        </div>");
+                        }
+                        if (bin.metabolites.length > displayCount) {
+                            metabolitesList += "<div style=\"font-size:12px; color:#AAA;\">&nbsp;&nbsp;... and ".concat(bin.metabolites.length - displayCount, " more</div>");
+                        }
+                        return "\n                        <div style=\"font-weight:bold; color:#FFD700; margin-bottom:5px;\">RT Window: ".concat(timeStr, "</div>\n                        <div style=\"margin-bottom:5px;\">Total Score: <span style=\"color:#FF4500; font-weight:bold;\">").concat(bin.totalScore.toFixed(4), "</span></div>\n                        <div style=\"font-weight:bold; color:#00FFFF;\">Metabolites (").concat(bin.metabolites.length, "):</div>\n                        ").concat(metabolitesList, "\n                    ");
+                    }
+                },
+                grid: {
+                    left: '8%',
+                    right: '8%',
+                    bottom: '10%',
+                    top: '10%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+                    name: 'Retention Time (min)',
+                    nameTextStyle: { color: '#fff', fontSize: 14 },
+                    axisLine: { lineStyle: { color: '#ccc' } },
+                    axisLabel: { color: '#ccc' },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Summed Score (10s window)',
+                    nameTextStyle: { color: '#fff', fontSize: 14 },
+                    axisLine: { lineStyle: { color: '#ccc' } },
+                    axisLabel: { color: '#ccc' },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                series: [
+                    {
+                        type: 'line',
+                        data: lineData,
+                        smooth: true, // 平滑曲线模拟 TIC
+                        symbol: 'circle',
+                        symbolSize: 6,
+                        lineStyle: {
+                            width: 3,
+                            color: '#FF1493' // 鲜艳的深粉色
+                        },
+                        itemStyle: {
+                            color: '#00FFFF', // 鲜艳的青色
+                            borderColor: '#fff',
+                            borderWidth: 1
+                        },
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: 'rgba(255, 20, 147, 0.8)' }, // 顶部高亮
+                                { offset: 1, color: 'rgba(255, 20, 147, 0.1)' } // 底部透明
+                            ])
+                        },
+                        emphasis: {
+                            focus: 'series',
+                            itemStyle: {
+                                borderColor: '#fff',
+                                borderWidth: 2,
+                                shadowBlur: 10,
+                                shadowColor: '#FF1493'
+                            }
+                        }
+                    }
+                ]
+            };
+            this.chartInstance.setOption(option, true);
+        };
+        // 销毁实例
+        MassSpecVisualizer.prototype.dispose = function () {
+            this.chartInstance.dispose();
+        };
+        return MassSpecVisualizer;
+    }());
+    viewer.MassSpecVisualizer = MassSpecVisualizer;
 })(viewer || (viewer = {}));
 var viewer;
 (function (viewer) {

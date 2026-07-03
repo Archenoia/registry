@@ -100,13 +100,6 @@ declare namespace pages {
         static loadMetaboliteData(): void;
         private static showTable;
     }
-    interface metabolite_sources {
-        id: number;
-        name: string;
-        formula: string;
-        exact_mass: number;
-        size: number;
-    }
 }
 declare namespace pages {
     const url_user_info = "/user/info/";
@@ -128,6 +121,33 @@ declare namespace pages.landscapes {
 }
 declare namespace viewer {
     function initChart(containerId: string, option: {}): echarts.ECharts;
+}
+declare namespace viewer {
+    interface metabolite_sources {
+        id: number;
+        name: string;
+        formula: string;
+        adducts: string;
+        mz: number;
+        q3: number;
+        rt: number;
+        score: number;
+    }
+    class MassSpecVisualizer {
+        private chartInstance;
+        constructor(dom: HTMLElement);
+        /**
+         * 任务 1: mz, rt 散点热图
+         * x轴: rt (分钟), y轴: mz, 颜色映射: score
+         */
+        renderScatterHeatmap(data: metabolite_sources[]): void;
+        /**
+         * 任务 2: 类似 TIC 图的曲线图
+         * 使用 10 秒钟 (10/60 分钟) 的 rt 窗口对 score 进行总加和
+         */
+        renderBinnedTICChart(data: metabolite_sources[]): void;
+        dispose(): void;
+    }
 }
 declare namespace viewer {
     /**

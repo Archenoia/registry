@@ -33,8 +33,11 @@ namespace pages {
                         if (msg.code == 0) {
                             taxonomy_data.showTable(<any>msg.info);
                         } else {
-                            $ts("#metab-source").display(`<div class="alert alert-danger" role="alert">
+                            $ts("#metab-source").display(`<div class="alert alert-danger d-flex align-items-center" role="alert">
+  <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+  <div>
   Server Error or you have no access to this data.
+</div>
 </div>`);
                         }
                     });
@@ -45,13 +48,16 @@ namespace pages {
         }
 
         private static showTable(tbl: []) {
-            let data = $from(<metabolite_sources[]>tbl).Select(a => {
+            let data = $from(<viewer.metabolite_sources[]>tbl).Select(a => {
                 return {
                     "ID": `<a href="/metabolite/${a.id}">${a.id}</a>`,
                     "Name": `<a href="/spectrum/?metab=${a.id}">${a.name}</a>`,
                     "Formula": a.formula,
-                    "Exact Mass": a.exact_mass,
-                    "Hits": a.size
+                    "Adducts": a.adducts,
+                    "M/z": a.mz,
+                    "RT(min)": a.rt,
+                    "Q3": a.q3,
+                    "Score": a.score
                 };
             });
 
@@ -64,13 +70,5 @@ namespace pages {
                 $ts.appendTable(data, "#metab-source", null, { class: "table" });
             }
         }
-    }
-
-    export interface metabolite_sources {
-        id: number;
-        name: string;
-        formula: string;
-        exact_mass: number;
-        size: number;
     }
 }

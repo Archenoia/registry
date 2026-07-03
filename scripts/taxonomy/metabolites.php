@@ -2,24 +2,28 @@
 
 class metabolite {
 
-    public static function organism_source($taxid, $top = 150) {
+    public static function organism_source($taxid, $page =1, $page_size = 150) {
+        $offset = ($page - 1) * $page_size;
         $sql = "SELECT 
-        CONCAT('BioCAD', LPAD(metabolites.id, 11, '0')) AS id, name, formula, ROUND(exact_mass, 4) AS exact_mass, size
-    FROM
-        (SELECT 
-            db_xref, COUNT(*) AS size
+            ROUND(score, 1) AS score,
+            ROUND(rt / 60, 1) AS rt,
+            ROUND(q3, 2) AS q3,
+            CONCAT('BioCAD', LPAD(db_xref, 11, '0')) AS id,
+            metabolites.name,
+            adducts,
+            ROUND(annotation.mz, 4) AS mz,
+            metabolites.formula
         FROM
-            mzvault.sampleinfo
-        LEFT JOIN spectrum ON spectrum.sample_id = sampleinfo.id
-        LEFT JOIN annotation ON annotation.id = annotation_id
+            mzvault.representative
+                LEFT JOIN
+            annotation ON annotation.id = precursor_id
+                LEFT JOIN
+            cad_registry.metabolites ON metabolites.id = db_xref
         WHERE
-            taxid = {$taxid}
-        GROUP BY db_xref
-        ORDER BY size DESC
-        LIMIT {$top}) t1
-            LEFT JOIN
-        cad_registry.metabolites ON t1.db_xref = id";
-breakpoint($sql);
+            organism = {$taxid} AND score > 0
+        ORDER BY score DESC
+        LIMIT {$page_size},{$offset}";
+
         return (new Table(["mzvault"=>"sampleinfo"]))->getDriver()->Fetch($sql);
     }
 }
