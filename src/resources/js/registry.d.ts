@@ -155,7 +155,7 @@ declare namespace viewer {
          * 任务 2: 类似 TIC 图的曲线图
          * 使用 10 秒钟 (10/60 分钟) 的 rt 窗口对 score 进行总加和
          */
-        renderBinnedTICChart(data: metabolite_sources[]): void;
+        renderBinnedTICChart(data: metabolite_sources[], windowSizeMin?: number): void;
         dispose(): void;
     }
 }

@@ -318,8 +318,8 @@ var data;
         if (data.length === 0)
             return [];
         // 提取需要过滤的维度
-        var rts = data.map(function (d) { return d.rt; }).sort(function (a, b) { return a - b; });
-        var mzs = data.map(function (d) { return d.mz; }).sort(function (a, b) { return a - b; });
+        var rts = data.map(function (d) { return +d.rt; }).sort(function (a, b) { return a - b; });
+        var mzs = data.map(function (d) { return +d.mz; }).sort(function (a, b) { return a - b; });
         // 计算百分位数的辅助函数
         var getPercentile = function (sortedArr, p) {
             var index = (p / 100) * (sortedArr.length - 1);
@@ -342,10 +342,13 @@ var data;
         var mzIQR = mzQ3 - mzQ1;
         var mzLowerBound = Math.max(0, mzQ1 - multiplier * mzIQR); // m/z不能小于0
         var mzUpperBound = mzQ3 + multiplier * mzIQR;
+        console.log("RT IQR: [".concat(rtLowerBound, ", ").concat(rtUpperBound, "], m/z IQR: [").concat(mzLowerBound, ", ").concat(mzUpperBound, "]"));
         // 过滤数据
         return data.filter(function (item) {
-            return item.rt >= rtLowerBound && item.rt <= rtUpperBound &&
-                item.mz >= mzLowerBound && item.mz <= mzUpperBound;
+            var rt = +item.rt;
+            var mz = +item.mz;
+            return rt >= rtLowerBound && rt <= rtUpperBound &&
+                mz >= mzLowerBound && mz <= mzUpperBound;
         });
     }
     data_1.filterOutliers = filterOutliers;
@@ -1036,11 +1039,11 @@ var viewer;
          * 任务 2: 类似 TIC 图的曲线图
          * 使用 10 秒钟 (10/60 分钟) 的 rt 窗口对 score 进行总加和
          */
-        MassSpecVisualizer.prototype.renderBinnedTICChart = function (data) {
-            var windowSizeMin = 10 / 60;
+        MassSpecVisualizer.prototype.renderBinnedTICChart = function (data, windowSizeMin) {
+            if (windowSizeMin === void 0) { windowSizeMin = 10 / 60; }
             if (data.length === 0)
                 return;
-            var sortedData = __spreadArray([], data, true).sort(function (a, b) { return a.rt - b.rt; });
+            var sortedData = __spreadArray([], data, true).sort(function (a, b) { return (+a.rt) - (+b.rt); });
             var minRt = Math.floor(sortedData[0].rt / windowSizeMin) * windowSizeMin;
             var maxRt = Math.ceil(sortedData[sortedData.length - 1].rt / windowSizeMin) * windowSizeMin;
             var bins = [];
@@ -1053,9 +1056,9 @@ var viewer;
                 });
             }
             sortedData.forEach(function (item) {
-                var binIndex = Math.floor((item.rt - minRt) / windowSizeMin);
+                var binIndex = Math.floor((+item.rt - minRt) / windowSizeMin);
                 if (binIndex >= 0 && binIndex < bins.length) {
-                    bins[binIndex].totalScore += item.score;
+                    bins[binIndex].totalScore += +item.score;
                     bins[binIndex].metabolites.push(item);
                 }
             });

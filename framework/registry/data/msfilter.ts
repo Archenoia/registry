@@ -10,8 +10,8 @@ namespace data {
         if (data.length === 0) return [];
 
         // 提取需要过滤的维度
-        const rts = data.map(d => d.rt).sort((a, b) => a - b);
-        const mzs = data.map(d => d.mz).sort((a, b) => a - b);
+        const rts = data.map(d => +d.rt).sort((a, b) => a - b);
+        const mzs = data.map(d => +d.mz).sort((a, b) => a - b);
 
         // 计算百分位数的辅助函数
         const getPercentile = (sortedArr: number[], p: number) => {
@@ -37,11 +37,16 @@ namespace data {
         const mzLowerBound = Math.max(0, mzQ1 - multiplier * mzIQR); // m/z不能小于0
         const mzUpperBound = mzQ3 + multiplier * mzIQR;
 
+        console.log(`RT IQR: [${rtLowerBound}, ${rtUpperBound}], m/z IQR: [${mzLowerBound}, ${mzUpperBound}]`);
+
         // 过滤数据
-        return data.filter(item =>
-            item.rt >= rtLowerBound && item.rt <= rtUpperBound &&
-            item.mz >= mzLowerBound && item.mz <= mzUpperBound
-        );
+        return data.filter(item => {
+            const rt = +item.rt;
+            const mz = +item.mz;
+
+            return rt >= rtLowerBound && rt <= rtUpperBound &&
+                mz >= mzLowerBound && mz <= mzUpperBound
+        });
     }
 
 }

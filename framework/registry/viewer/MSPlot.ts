@@ -131,11 +131,10 @@ namespace viewer {
          * 任务 2: 类似 TIC 图的曲线图
          * 使用 10 秒钟 (10/60 分钟) 的 rt 窗口对 score 进行总加和
          */
-        public renderBinnedTICChart(data: metabolite_sources[]): void {
-            const windowSizeMin = 10 / 60;
+        public renderBinnedTICChart(data: metabolite_sources[], windowSizeMin: number = 10 / 60): void {
             if (data.length === 0) return;
 
-            const sortedData = [...data].sort((a, b) => a.rt - b.rt);
+            const sortedData = [...data].sort((a, b) => (+a.rt) - (+b.rt));
 
             const minRt = Math.floor(sortedData[0].rt / windowSizeMin) * windowSizeMin;
             const maxRt = Math.ceil(sortedData[sortedData.length - 1].rt / windowSizeMin) * windowSizeMin;
@@ -157,9 +156,9 @@ namespace viewer {
             }
 
             sortedData.forEach(item => {
-                const binIndex = Math.floor((item.rt - minRt) / windowSizeMin);
+                const binIndex = Math.floor((+item.rt - minRt) / windowSizeMin);
                 if (binIndex >= 0 && binIndex < bins.length) {
-                    bins[binIndex].totalScore += item.score;
+                    bins[binIndex].totalScore += +item.score;
                     bins[binIndex].metabolites.push(item);
                 }
             });
