@@ -18,6 +18,15 @@ declare namespace data.ZipData {
     export function parseCsvText(csvText: string): MetabolicEmbedding[];
     export {};
 }
+declare namespace data {
+    /**
+     * 使用 IQR (四分位距) 方法过滤 mz 和 rt 中的异常离群点
+     * @param data 原始数据
+     * @param multiplier IQR 的倍数，通常为 1.5 (标准) 或 3.0 (只过滤极端离群点)
+     * @returns 过滤后的数据
+     */
+    function filterOutliers(data: viewer.metabolite_sources[], multiplier?: number): viewer.metabolite_sources[];
+}
 declare namespace viewer {
     class SpectrumViewer {
         private chartInstance;

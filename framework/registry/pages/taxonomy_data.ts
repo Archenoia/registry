@@ -18,7 +18,7 @@ namespace pages {
                 const scatter = new viewer.MassSpecVisualizer($ts("#scatter-chart"));
                 const tic = new viewer.MassSpecVisualizer($ts("#tic-chart"));
                 // 获取数据
-                const myData: viewer.metabolite_sources[] = taxonomy_data.metabolite_data;
+                const myData: viewer.metabolite_sources[] = data.filterOutliers(taxonomy_data.metabolite_data);
 
                 // 渲染散点热图
                 scatter.renderScatterHeatmap([...myData]);

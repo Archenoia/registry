@@ -305,6 +305,51 @@ var data;
         }
     })(ZipData = data.ZipData || (data.ZipData = {}));
 })(data || (data = {}));
+var data;
+(function (data_1) {
+    /**
+     * 使用 IQR (四分位距) 方法过滤 mz 和 rt 中的异常离群点
+     * @param data 原始数据
+     * @param multiplier IQR 的倍数，通常为 1.5 (标准) 或 3.0 (只过滤极端离群点)
+     * @returns 过滤后的数据
+     */
+    function filterOutliers(data, multiplier) {
+        if (multiplier === void 0) { multiplier = 1.5; }
+        if (data.length === 0)
+            return [];
+        // 提取需要过滤的维度
+        var rts = data.map(function (d) { return d.rt; }).sort(function (a, b) { return a - b; });
+        var mzs = data.map(function (d) { return d.mz; }).sort(function (a, b) { return a - b; });
+        // 计算百分位数的辅助函数
+        var getPercentile = function (sortedArr, p) {
+            var index = (p / 100) * (sortedArr.length - 1);
+            var lower = Math.floor(index);
+            var upper = Math.ceil(index);
+            if (lower === upper)
+                return sortedArr[lower];
+            // 线性插值
+            return sortedArr[lower] + (sortedArr[upper] - sortedArr[lower]) * (index - lower);
+        };
+        // 计算 RT 的 IQR 范围
+        var rtQ1 = getPercentile(rts, 25);
+        var rtQ3 = getPercentile(rts, 75);
+        var rtIQR = rtQ3 - rtQ1;
+        var rtLowerBound = Math.max(0, rtQ1 - multiplier * rtIQR); // RT不能小于0
+        var rtUpperBound = rtQ3 + multiplier * rtIQR;
+        // 计算 mz 的 IQR 范围
+        var mzQ1 = getPercentile(mzs, 25);
+        var mzQ3 = getPercentile(mzs, 75);
+        var mzIQR = mzQ3 - mzQ1;
+        var mzLowerBound = Math.max(0, mzQ1 - multiplier * mzIQR); // m/z不能小于0
+        var mzUpperBound = mzQ3 + multiplier * mzIQR;
+        // 过滤数据
+        return data.filter(function (item) {
+            return item.rt >= rtLowerBound && item.rt <= rtUpperBound &&
+                item.mz >= mzLowerBound && item.mz <= mzUpperBound;
+        });
+    }
+    data_1.filterOutliers = filterOutliers;
+})(data || (data = {}));
 var viewer;
 (function (viewer) {
     var SpectrumViewer = /** @class */ (function () {
@@ -598,7 +643,7 @@ var pages;
             $ts.get("/mzvault/peakdata/?mz=".concat(mz, "&da=").concat(da), function (result) {
                 if (result.code == 0) {
                     var peaks = result.info.peak;
-                    var data_1 = $from(peaks).Select(function (a) {
+                    var data_2 = $from(peaks).Select(function (a) {
                         return {
                             metabolite: "<a href=\"/spectrum/?metab=".concat(a.db_xref, "\">").concat(a.name, "</a><br /><br />\n                            adduct: ").concat(a.adducts, "<br />\n                            precurosr: ").concat(a.precursor, "\n                            "),
                             splash_id: a.splash_id,
@@ -608,7 +653,7 @@ var pages;
                     });
                     console.table(peaks);
                     $ts("#peaksdata").clear();
-                    $ts.appendTable(data_1, "#peaksdata", null, { class: "table" });
+                    $ts.appendTable(data_2, "#peaksdata", null, { class: "table" });
                 }
             });
         };
@@ -639,7 +684,7 @@ var pages;
         spectrum_data.prototype.load_exp = function () {
             $ts.get(url_experiment_source, function (msg) {
                 if (msg.code == 0) {
-                    var data_2 = $ts(msg.info).Where(function (a) { return (!Strings.Empty(a.taxid, true)) && (!Strings.Empty(a.taxname, true)); }).Select(function (a) {
+                    var data_3 = $ts(msg.info).Where(function (a) { return (!Strings.Empty(a.taxid, true)) && (!Strings.Empty(a.taxname, true)); }).Select(function (a) {
                         return {
                             "Organism Source": "<a href=\"/taxonomy/?id=".concat(a.taxid, "\">").concat(a.taxname, "</a>"),
                             "Tissue": a.tissue,
@@ -649,9 +694,9 @@ var pages;
                             "rt(min)": a.rt
                         };
                     });
-                    if (data_2.Count > 0) {
+                    if (data_3.Count > 0) {
                         $ts("#exp_table").clear();
-                        $ts.appendTable(data_2, "#exp_table", null, { class: "table" });
+                        $ts.appendTable(data_3, "#exp_table", null, { class: "table" });
                         $ts.select(".spectrum_id").onClick(function (a) {
                             var rep_spectrum = a.getAttribute("data");
                         });
@@ -696,7 +741,7 @@ var pages;
                 var scatter = new viewer.MassSpecVisualizer($ts("#scatter-chart"));
                 var tic = new viewer.MassSpecVisualizer($ts("#tic-chart"));
                 // 获取数据
-                var myData = taxonomy_data.metabolite_data;
+                var myData = data.filterOutliers(taxonomy_data.metabolite_data);
                 // 渲染散点热图
                 scatter.renderScatterHeatmap(__spreadArray([], myData, true));
                 // TIC 图
