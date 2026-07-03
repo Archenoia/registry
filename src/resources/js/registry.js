@@ -748,7 +748,10 @@ var pages;
                 // 渲染散点热图
                 scatter.renderScatterHeatmap(__spreadArray([], myData, true));
                 // TIC 图
-                tic.renderBinnedTICChart(__spreadArray([], myData, true));
+                tic.renderBinnedTICChart(__spreadArray([], myData, true), function (metabolites) {
+                    // 处理点击事件，例如显示详细信息
+                    taxonomy_data.showTable(metabolites);
+                });
             });
         };
         taxonomy_data.loadMetaboliteData = function (landscape, render) {
@@ -1034,12 +1037,23 @@ var viewer;
                 ]
             };
             this.chartInstance.setOption(option, true);
+            // ---------------- 新增：散点图点击事件 ----------------
+            // 每次渲染前先移除旧的事件监听，防止重复绑定
+            this.chartInstance.off('click');
+            this.chartInstance.on('click', function (params) {
+                // 确保点击的是数据点
+                if (params.componentType === 'series' && params.data && params.data.rawData) {
+                    var item = params.data.rawData;
+                    // 跳转到指定页面，这里使用新标签页打开
+                    $goto("/spectrum/?metab=".concat(item.id));
+                }
+            });
         };
         /**
          * 任务 2: 类似 TIC 图的曲线图
          * 使用 10 秒钟 (10/60 分钟) 的 rt 窗口对 score 进行总加和
          */
-        MassSpecVisualizer.prototype.renderBinnedTICChart = function (data, windowSizeMin) {
+        MassSpecVisualizer.prototype.renderBinnedTICChart = function (data, onBinClick, windowSizeMin) {
             if (windowSizeMin === void 0) { windowSizeMin = 10 / 60; }
             if (data.length === 0)
                 return;
@@ -1149,6 +1163,23 @@ var viewer;
                 ]
             };
             this.chartInstance.setOption(option, true);
+            // ---------------- 新增：TIC图点击事件 ----------------
+            this.chartInstance.off('click');
+            this.chartInstance.on('click', function (params) {
+                if (params.componentType === 'series' && params.data && params.data.rawData) {
+                    var bin = params.data.rawData;
+                    // 获取该时间区间内的所有数据点
+                    var metabolitesInBin = bin.metabolites;
+                    if (onBinClick) {
+                        // 如果调用者传入了回调函数，则将数据传递出去
+                        onBinClick(metabolitesInBin);
+                    }
+                    else {
+                        // 默认行为：打印到控制台供调试
+                        console.log("\u83B7\u53D6\u5230 ".concat(bin.rtStart.toFixed(2), " -").concat(bin.rtEnd.toFixed(2), " min \u65F6\u95F4\u533A\u95F4\u5185\u7684\u6570\u636E\u70B9:"), metabolitesInBin);
+                    }
+                }
+            });
         };
         MassSpecVisualizer.prototype.dispose = function () {
             this.chartInstance.dispose();

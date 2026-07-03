@@ -23,7 +23,10 @@ namespace pages {
                 // 渲染散点热图
                 scatter.renderScatterHeatmap([...myData]);
                 // TIC 图
-                tic.renderBinnedTICChart([...myData]);
+                tic.renderBinnedTICChart([...myData], (metabolites) => {
+                    // 处理点击事件，例如显示详细信息
+                    taxonomy_data.showTable(metabolites);
+                });
             });
         }
 
@@ -66,8 +69,8 @@ namespace pages {
             });
         }
 
-        private static showTable(tbl: []) {
-            let data = $from(<viewer.metabolite_sources[]>tbl).Take(30).Select(a => {
+        private static showTable(tbl: viewer.metabolite_sources[]) {
+            let data = $from(tbl).Take(30).Select(a => {
                 return {
                     "ID": `<a href="/metabolite/${a.id}">${a.id}</a>`,
                     "Name": `<a href="/spectrum/?metab=${a.id}">${a.name}</a>`,

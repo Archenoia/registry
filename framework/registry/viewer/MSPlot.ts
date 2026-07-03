@@ -125,13 +125,25 @@ namespace viewer {
             };
 
             this.chartInstance.setOption(option, true);
+
+            // ---------------- 新增：散点图点击事件 ----------------
+            // 每次渲染前先移除旧的事件监听，防止重复绑定
+            this.chartInstance.off('click');
+            this.chartInstance.on('click', (params: any) => {
+                // 确保点击的是数据点
+                if (params.componentType === 'series' && params.data && params.data.rawData) {
+                    const item = params.data.rawData as metabolite_sources;
+                    // 跳转到指定页面，这里使用新标签页打开
+                    $goto(`/spectrum/?metab=${item.id}`);
+                }
+            });
         }
 
         /**
          * 任务 2: 类似 TIC 图的曲线图
          * 使用 10 秒钟 (10/60 分钟) 的 rt 窗口对 score 进行总加和
          */
-        public renderBinnedTICChart(data: metabolite_sources[], windowSizeMin: number = 10 / 60): void {
+        public renderBinnedTICChart(data: metabolite_sources[], onBinClick?: (metabolites: metabolite_sources[]) => void, windowSizeMin: number = 10 / 60): void {
             if (data.length === 0) return;
 
             const sortedData = [...data].sort((a, b) => (+a.rt) - (+b.rt));
@@ -261,6 +273,24 @@ namespace viewer {
             };
 
             this.chartInstance.setOption(option, true);
+
+            // ---------------- 新增：TIC图点击事件 ----------------
+            this.chartInstance.off('click');
+            this.chartInstance.on('click', (params: any) => {
+                if (params.componentType === 'series' && params.data && params.data.rawData) {
+                    const bin = params.data.rawData;
+                    // 获取该时间区间内的所有数据点
+                    const metabolitesInBin = bin.metabolites as metabolite_sources[];
+
+                    if (onBinClick) {
+                        // 如果调用者传入了回调函数，则将数据传递出去
+                        onBinClick(metabolitesInBin);
+                    } else {
+                        // 默认行为：打印到控制台供调试
+                        console.log(`获取到 ${bin.rtStart.toFixed(2)} -${bin.rtEnd.toFixed(2)} min 时间区间内的数据点:`, metabolitesInBin);
+                    }
+                }
+            });
         }
 
         public dispose(): void {
