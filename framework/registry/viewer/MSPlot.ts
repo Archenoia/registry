@@ -193,7 +193,7 @@ namespace viewer {
 
                         return `
                         <div style="font-weight:bold; color:${THEME.accent}; margin-bottom:5px;">RT Window:${timeStr}</div>
-                        <div style="margin-bottom:5px;">Total Score: <span style="color:#FFD700; font-weight:bold;">${bin.totalScore.toFixed(4)}</span></div>
+                        <div style="margin-bottom:5px;">Total Score: <span style="color:#FFD700; font-weight:bold;">${(+bin.totalScore).toFixed(4)}</span></div>
                         <div style="font-weight:bold; color:#00CED1;">Metabolites (${bin.metabolites.length}):</div>
                         ${metabolitesList}
                     `;

@@ -1036,7 +1036,7 @@ var viewer;
                         if (bin.metabolites.length > displayCount) {
                             metabolitesList += "<div style=\"font-size:12px; color:#A9A9A9;\">&nbsp;&nbsp;... and ".concat(bin.metabolites.length - displayCount, " more</div>");
                         }
-                        return "\n                        <div style=\"font-weight:bold; color:".concat(THEME.accent, "; margin-bottom:5px;\">RT Window:").concat(timeStr, "</div>\n                        <div style=\"margin-bottom:5px;\">Total Score: <span style=\"color:#FFD700; font-weight:bold;\">").concat(bin.totalScore.toFixed(4), "</span></div>\n                        <div style=\"font-weight:bold; color:#00CED1;\">Metabolites (").concat(bin.metabolites.length, "):</div>\n                        ").concat(metabolitesList, "\n                    ");
+                        return "\n                        <div style=\"font-weight:bold; color:".concat(THEME.accent, "; margin-bottom:5px;\">RT Window:").concat(timeStr, "</div>\n                        <div style=\"margin-bottom:5px;\">Total Score: <span style=\"color:#FFD700; font-weight:bold;\">").concat((+bin.totalScore).toFixed(4), "</span></div>\n                        <div style=\"font-weight:bold; color:#00CED1;\">Metabolites (").concat(bin.metabolites.length, "):</div>\n                        ").concat(metabolitesList, "\n                    ");
                     }
                 },
                 grid: {
