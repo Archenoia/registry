@@ -701,6 +701,9 @@ var pages;
                         if (msg.code == 0) {
                             taxonomy_data.showTable(msg.info);
                         }
+                        else {
+                            $ts("#metab-source").display("<div class=\"alert alert-danger\" role=\"alert\">\n  Server Error or you have no access to this data.\n</div>");
+                        }
                     });
                 }
                 else {
@@ -718,8 +721,13 @@ var pages;
                     "Hits": a.size
                 };
             });
-            $ts("#metab-source").clear();
-            $ts.appendTable(data, "#metab-source", null, { class: "table" });
+            if (data.Count == 0) {
+                $ts("#metab-source").display("<div class=\"alert alert-warning\" role=\"alert\">\n  No metabolite data found for this organism.\n</div>");
+            }
+            else {
+                $ts("#metab-source").clear();
+                $ts.appendTable(data, "#metab-source", null, { class: "table" });
+            }
         };
         return taxonomy_data;
     }(Bootstrap));

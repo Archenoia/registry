@@ -32,6 +32,10 @@ namespace pages {
                     $ts.get(`${url_organism_source}?taxid=${this.taxid()}`, msg => {
                         if (msg.code == 0) {
                             taxonomy_data.showTable(<any>msg.info);
+                        } else {
+                            $ts("#metab-source").display(`<div class="alert alert-danger" role="alert">
+  Server Error or you have no access to this data.
+</div>`);
                         }
                     });
                 } else {
@@ -51,8 +55,14 @@ namespace pages {
                 };
             });
 
-            $ts("#metab-source").clear();
-            $ts.appendTable(data, "#metab-source", null, { class: "table" });
+            if (data.Count == 0) {
+                $ts("#metab-source").display(`<div class="alert alert-warning" role="alert">
+  No metabolite data found for this organism.
+</div>`);
+            } else {
+                $ts("#metab-source").clear();
+                $ts.appendTable(data, "#metab-source", null, { class: "table" });
+            }
         }
     }
 

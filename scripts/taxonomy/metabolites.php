@@ -19,7 +19,7 @@ class metabolite {
         LIMIT {$top}) t1
             LEFT JOIN
         cad_registry.metabolites ON t1.db_xref = id";
-
+breakpoint($sql);
         return (new Table(["mzvault"=>"sampleinfo"]))->getDriver()->Fetch($sql);
     }
 }
