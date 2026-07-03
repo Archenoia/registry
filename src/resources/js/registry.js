@@ -718,9 +718,8 @@ var pages;
                     "Name": "<a href=\"/spectrum/?metab=".concat(a.id, "\">").concat(a.name, "</a>"),
                     "Formula": a.formula,
                     "Adducts": a.adducts,
-                    "M/z": a.mz,
-                    "RT(min)": a.rt,
-                    "Q3": a.q3,
+                    "MRM[Q1/Q3]": "".concat((+a.mz).toFixed(4), " / ").concat((+a.q3).toFixed(2)),
+                    "RT": a.rt + " min",
                     "Score": a.score
                 };
             });

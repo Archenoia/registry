@@ -116,7 +116,7 @@ class App {
     */
     public function organism_source($taxid) {
         include APP_PATH . "/scripts/taxonomy/metabolites.php";
-        $data = metabolite::organism_source($taxid, 30);
+        $data = metabolite::organism_source($taxid, 1, 30);
         controller::success($data);
     }
 }

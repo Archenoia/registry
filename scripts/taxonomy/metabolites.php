@@ -22,7 +22,7 @@ class metabolite {
         WHERE
             organism = {$taxid} AND score > 0
         ORDER BY score DESC
-        LIMIT {$page_size},{$offset}";
+        LIMIT {$offset},{$page_size}";
 
         return (new Table(["mzvault"=>"sampleinfo"]))->getDriver()->Fetch($sql);
     }
