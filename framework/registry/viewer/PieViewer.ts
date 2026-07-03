@@ -22,9 +22,26 @@ namespace viewer {
 
         public static viz_pie(rawData: SpeciesData, chart_id: string, title: string) {
             // 转换为 ECharts 需要的格式
-            const pieData: viewer.PieChartData[] = viewer.toPieData(rawData);
-            // 计算总和
+            const originalData: viewer.PieChartData[] = viewer.toPieData(rawData);
+
+            // 1. 按照 value 降序排序
+            originalData.sort((a, b) => b.value - a.value);
+
+            // 2. 保留前9个系列，其余合并到 Other
+            const TOP_N = 9;
+            let pieData: viewer.PieChartData[] = originalData.slice(0, TOP_N);
+
+            if (originalData.length > TOP_N) {
+                const otherData = originalData.slice(TOP_N);
+                const otherValue = otherData.reduce((sum, item) => sum + item.value, 0);
+                if (otherValue > 0) {
+                    pieData.push({ name: 'Other', value: otherValue });
+                }
+            }
+
+            // 计算总和 (基于处理后的 pieData 或原始数据均可，总和不变)
             const total: number = pieData.reduce((sum, item) => sum + item.value, 0);
+
             // ECharts 配置项
             const option: echarts.EChartsOption = {
                 // 标题配置
