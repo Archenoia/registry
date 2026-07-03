@@ -73,6 +73,8 @@ namespace viewer {
                 xAxis: {
                     type: 'value',
                     name: 'Retention Time (min)',
+                    nameLocation: 'middle', // 将名称位置设为居中
+                    nameGap: 30,            // 调整名称与轴线之间的距离，避免和刻度文字重叠（默认是15，可以设大一点）
                     nameTextStyle: { color: THEME.headingText, fontSize: 14 },
                     axisLine: { lineStyle: { color: THEME.defaultText } },
                     axisLabel: { color: THEME.defaultText },
@@ -209,6 +211,8 @@ namespace viewer {
                 xAxis: {
                     type: 'value',
                     name: 'Retention Time (min)',
+                    nameLocation: 'middle', // 将名称位置设为居中
+                    nameGap: 30,            // 调整名称与轴线之间的距离，避免和刻度文字重叠（默认是15，可以设大一点）
                     nameTextStyle: { color: THEME.headingText, fontSize: 14 },
                     axisLine: { lineStyle: { color: THEME.defaultText } },
                     axisLabel: { color: THEME.defaultText },
