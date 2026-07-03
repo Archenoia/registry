@@ -887,6 +887,15 @@ var viewer;
 })(viewer || (viewer = {}));
 var viewer;
 (function (viewer) {
+    // 提取主题色常量，方便统一管理
+    var THEME = {
+        background: '#ffffff',
+        defaultText: '#535d6b',
+        headingText: '#344761',
+        accent: '#5c99ee',
+        surface: '#ffffff',
+        contrast: '#ffffff'
+    };
     var MassSpecVisualizer = /** @class */ (function () {
         function MassSpecVisualizer(dom) {
             this.chartInstance = echarts.init(dom);
@@ -896,27 +905,24 @@ var viewer;
          * x轴: rt (分钟), y轴: mz, 颜色映射: score
          */
         MassSpecVisualizer.prototype.renderScatterHeatmap = function (data) {
-            // 提取 score 的最小最大值用于视觉映射
             var scores = data.map(function (d) { return d.score; });
             var minScore = Math.min.apply(Math, scores);
             var maxScore = Math.max.apply(Math, scores);
-            // 构造 ECharts 散点数据格式
-            // 为了让 tooltip 能拿到原始数据，我们将原始对象挂载到 data 上
             var seriesData = data.map(function (item) { return ({
                 value: [item.rt, item.mz, item.score],
                 rawData: item
             }); });
             var option = {
-                backgroundColor: '#1e1e2e', // 深色背景更能凸显鲜艳颜色
+                backgroundColor: THEME.background, // 白色背景
                 tooltip: {
                     trigger: 'item',
-                    backgroundColor: 'rgba(50, 50, 50, 0.9)',
-                    borderColor: '#fff',
+                    backgroundColor: THEME.headingText, // 深蓝灰背景
+                    borderColor: THEME.accent, // 主题蓝边框
                     borderWidth: 1,
-                    textStyle: { color: '#fff' },
+                    textStyle: { color: THEME.contrast }, // 白色文字
                     formatter: function (params) {
                         var item = params.data.rawData;
-                        return "\n                        <div style=\"font-weight:bold; color:#FFD700; margin-bottom:5px;\">".concat(item.name, "</div>\n                        <div>Formula: ").concat(item.formula, "</div>\n                        <div>Adducts: ").concat(item.adducts, "</div>\n                        <div>m/z: <span style=\"color:#00FFFF;\">").concat(item.mz.toFixed(4), "</span></div>\n                        <div>RT: <span style=\"color:#00FFFF;\">").concat(item.rt.toFixed(2), "</span> min</div>\n                        <div>Q3: ").concat(item.q3.toFixed(4), "</div>\n                        <div>Score: <span style=\"color:#FF4500; font-weight:bold;\">").concat(item.score.toFixed(4), "</span></div>\n                    ");
+                        return "\n                        <div style=\"font-weight:bold; color:".concat(THEME.accent, "; margin-bottom:5px;\">").concat(item.name, "</div>\n                        <div>Formula: ").concat(item.formula, "</div>\n                        <div>Adducts: ").concat(item.adducts, "</div>\n                        <div>m/z: <span style=\"color:#00CED1;\">").concat(item.mz.toFixed(4), "</span></div>\n                        <div>RT: <span style=\"color:#00CED1;\">").concat(item.rt.toFixed(2), "</span> min</div>\n                        <div>Q3: ").concat(item.q3.toFixed(4), "</div>\n                        <div>Score: <span style=\"color:#FF6347; font-weight:bold;\">").concat(item.score.toFixed(4), "</span></div>\n                    ");
                     }
                 },
                 grid: {
@@ -929,31 +935,31 @@ var viewer;
                 xAxis: {
                     type: 'value',
                     name: 'Retention Time (min)',
-                    nameTextStyle: { color: '#fff', fontSize: 14 },
-                    axisLine: { lineStyle: { color: '#ccc' } },
-                    axisLabel: { color: '#ccc' },
-                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                    nameTextStyle: { color: THEME.headingText, fontSize: 14 },
+                    axisLine: { lineStyle: { color: THEME.defaultText } },
+                    axisLabel: { color: THEME.defaultText },
+                    splitLine: { lineStyle: { color: 'rgba(83, 93, 107, 0.1)' } } // 浅灰蓝分割线
                 },
                 yAxis: {
                     type: 'value',
                     name: 'm/z',
-                    nameTextStyle: { color: '#fff', fontSize: 14 },
-                    axisLine: { lineStyle: { color: '#ccc' } },
-                    axisLabel: { color: '#ccc' },
-                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                    nameTextStyle: { color: THEME.headingText, fontSize: 14 },
+                    axisLine: { lineStyle: { color: THEME.defaultText } },
+                    axisLabel: { color: THEME.defaultText },
+                    splitLine: { lineStyle: { color: 'rgba(83, 93, 107, 0.1)' } }
                 },
                 visualMap: {
                     min: minScore,
                     max: maxScore,
-                    dimension: 2, // 映射数据的第三个维度 (index 2)，即 score
+                    dimension: 2,
                     calculable: true,
                     orient: 'vertical',
                     right: 0,
                     top: 'center',
-                    textStyle: { color: '#fff' },
-                    // 鲜艳明亮的颜色配色 (从冷色到暖色/亮色)
+                    textStyle: { color: THEME.defaultText },
+                    // 适合白色背景的鲜艳明亮配色 (蓝->青->绿->黄->红)
                     inRange: {
-                        color: ['#00FFCC', '#00FF00', '#FFFF00', '#FF8000', '#FF0000']
+                        color: ['#5c99ee', '#00CED1', '#32CD32', '#FFD700', '#FF4500']
                     }
                 },
                 series: [
@@ -963,13 +969,13 @@ var viewer;
                         symbolSize: 8,
                         itemStyle: {
                             opacity: 0.9,
-                            shadowBlur: 10,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            shadowBlur: 4,
+                            shadowColor: 'rgba(83, 93, 107, 0.3)' // 柔和的灰蓝阴影
                         },
                         emphasis: {
                             itemStyle: {
-                                shadowBlur: 15,
-                                borderColor: '#fff',
+                                shadowBlur: 8,
+                                borderColor: THEME.headingText,
                                 borderWidth: 2
                             },
                             scale: 1.5
@@ -984,14 +990,12 @@ var viewer;
          * 使用 10 秒钟 (10/60 分钟) 的 rt 窗口对 score 进行总加和
          */
         MassSpecVisualizer.prototype.renderBinnedTICChart = function (data) {
-            var windowSizeMin = 10 / 60; // 10秒转换为分钟
+            var windowSizeMin = 10 / 60;
             if (data.length === 0)
                 return;
-            // 按 rt 排序
             var sortedData = __spreadArray([], data, true).sort(function (a, b) { return a.rt - b.rt; });
             var minRt = Math.floor(sortedData[0].rt / windowSizeMin) * windowSizeMin;
             var maxRt = Math.ceil(sortedData[sortedData.length - 1].rt / windowSizeMin) * windowSizeMin;
-            // 构建分箱
             var bins = [];
             for (var t = minRt; t < maxRt; t += windowSizeMin) {
                 bins.push({
@@ -1001,7 +1005,6 @@ var viewer;
                     metabolites: []
                 });
             }
-            // 将数据填入分箱
             sortedData.forEach(function (item) {
                 var binIndex = Math.floor((item.rt - minRt) / windowSizeMin);
                 if (binIndex >= 0 && binIndex < bins.length) {
@@ -1009,33 +1012,31 @@ var viewer;
                     bins[binIndex].metabolites.push(item);
                 }
             });
-            // 构造 ECharts 折线图数据
             var lineData = bins.map(function (bin) { return ({
                 value: [bin.rtStart, bin.totalScore],
                 rawData: bin
             }); });
             var option = {
-                backgroundColor: '#1e1e2e',
+                backgroundColor: THEME.background,
                 tooltip: {
                     trigger: 'axis',
-                    backgroundColor: 'rgba(50, 50, 50, 0.9)',
-                    borderColor: '#fff',
+                    backgroundColor: THEME.headingText,
+                    borderColor: THEME.accent,
                     borderWidth: 1,
-                    textStyle: { color: '#fff' },
+                    textStyle: { color: THEME.contrast },
                     formatter: function (params) {
                         var bin = params[0].data.rawData;
-                        var timeStr = "".concat(bin.rtStart.toFixed(2), " - ").concat(bin.rtEnd.toFixed(2), " min");
-                        // 提取该窗口内的代谢物信息（限制显示数量防止 tooltip 过长）
+                        var timeStr = "".concat(bin.rtStart.toFixed(2), " -").concat(bin.rtEnd.toFixed(2), " min");
                         var displayCount = Math.min(bin.metabolites.length, 5);
                         var metabolitesList = '';
                         for (var i = 0; i < displayCount; i++) {
                             var m = bin.metabolites[i];
-                            metabolitesList += "<div style=\"font-size:12px; color:#DDD;\">\n                            &nbsp;&nbsp;\u2022 ".concat(m.name, " (MRM(Q1/Q3): ").concat(m.mz.toFixed(4), "/").concat(m.q3.toFixed(2), ", RT: ").concat(m.rt.toFixed(2), "min)\n                        </div>");
+                            metabolitesList += "<div style=\"font-size:12px; color:#D3D3D3;\">\n                            &nbsp;&nbsp;\u2022 ".concat(m.name, " (m/z:").concat(m.mz.toFixed(2), ", RT: ").concat(m.rt.toFixed(2), ")\n                        </div>");
                         }
                         if (bin.metabolites.length > displayCount) {
-                            metabolitesList += "<div style=\"font-size:12px; color:#AAA;\">&nbsp;&nbsp;... and ".concat(bin.metabolites.length - displayCount, " more</div>");
+                            metabolitesList += "<div style=\"font-size:12px; color:#A9A9A9;\">&nbsp;&nbsp;... and ".concat(bin.metabolites.length - displayCount, " more</div>");
                         }
-                        return "\n                        <div style=\"font-weight:bold; color:#FFD700; margin-bottom:5px;\">RT Window: ".concat(timeStr, "</div>\n                        <div style=\"margin-bottom:5px;\">Total Score: <span style=\"color:#FF4500; font-weight:bold;\">").concat(bin.totalScore.toFixed(4), "</span></div>\n                        <div style=\"font-weight:bold; color:#00FFFF;\">Metabolites (").concat(bin.metabolites.length, "):</div>\n                        ").concat(metabolitesList, "\n                    ");
+                        return "\n                        <div style=\"font-weight:bold; color:".concat(THEME.accent, "; margin-bottom:5px;\">RT Window:").concat(timeStr, "</div>\n                        <div style=\"margin-bottom:5px;\">Total Score: <span style=\"color:#FFD700; font-weight:bold;\">").concat(bin.totalScore.toFixed(4), "</span></div>\n                        <div style=\"font-weight:bold; color:#00CED1;\">Metabolites (").concat(bin.metabolites.length, "):</div>\n                        ").concat(metabolitesList, "\n                    ");
                     }
                 },
                 grid: {
@@ -1048,48 +1049,48 @@ var viewer;
                 xAxis: {
                     type: 'value',
                     name: 'Retention Time (min)',
-                    nameTextStyle: { color: '#fff', fontSize: 14 },
-                    axisLine: { lineStyle: { color: '#ccc' } },
-                    axisLabel: { color: '#ccc' },
-                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                    nameTextStyle: { color: THEME.headingText, fontSize: 14 },
+                    axisLine: { lineStyle: { color: THEME.defaultText } },
+                    axisLabel: { color: THEME.defaultText },
+                    splitLine: { lineStyle: { color: 'rgba(83, 93, 107, 0.1)' } }
                 },
                 yAxis: {
                     type: 'value',
                     name: 'Summed Score (10s window)',
-                    nameTextStyle: { color: '#fff', fontSize: 14 },
-                    axisLine: { lineStyle: { color: '#ccc' } },
-                    axisLabel: { color: '#ccc' },
-                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                    nameTextStyle: { color: THEME.headingText, fontSize: 14 },
+                    axisLine: { lineStyle: { color: THEME.defaultText } },
+                    axisLabel: { color: THEME.defaultText },
+                    splitLine: { lineStyle: { color: 'rgba(83, 93, 107, 0.1)' } }
                 },
                 series: [
                     {
                         type: 'line',
                         data: lineData,
-                        smooth: true, // 平滑曲线模拟 TIC
+                        smooth: true,
                         symbol: 'circle',
                         symbolSize: 6,
                         lineStyle: {
                             width: 3,
-                            color: '#FF1493' // 鲜艳的深粉色
+                            color: THEME.accent // 使用主题强调蓝作为曲线颜色
                         },
                         itemStyle: {
-                            color: '#00FFFF', // 鲜艳的青色
+                            color: '#FF4500', // 橙红色圆点在白底+蓝线上对比强烈且明亮
                             borderColor: '#fff',
                             borderWidth: 1
                         },
                         areaStyle: {
                             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                                { offset: 0, color: 'rgba(255, 20, 147, 0.8)' }, // 顶部高亮
-                                { offset: 1, color: 'rgba(255, 20, 147, 0.1)' } // 底部透明
+                                { offset: 0, color: 'rgba(92, 153, 238, 0.6)' }, // 主题蓝渐变
+                                { offset: 1, color: 'rgba(92, 153, 238, 0.02)' }
                             ])
                         },
                         emphasis: {
                             focus: 'series',
                             itemStyle: {
-                                borderColor: '#fff',
+                                borderColor: THEME.headingText,
                                 borderWidth: 2,
-                                shadowBlur: 10,
-                                shadowColor: '#FF1493'
+                                shadowBlur: 8,
+                                shadowColor: 'rgba(52, 71, 97, 0.3)'
                             }
                         }
                     }
@@ -1097,7 +1098,6 @@ var viewer;
             };
             this.chartInstance.setOption(option, true);
         };
-        // 销毁实例
         MassSpecVisualizer.prototype.dispose = function () {
             this.chartInstance.dispose();
         };
