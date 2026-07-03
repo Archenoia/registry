@@ -231,7 +231,7 @@ namespace viewer {
                 },
                 yAxis: {
                     type: 'value',
-                    name: 'Summed Score (10s window)',
+                    name: 'Total Score',
                     nameTextStyle: { color: THEME.headingText, fontSize: 14 },
                     axisLine: { lineStyle: { color: THEME.defaultText } },
                     axisLabel: { color: THEME.defaultText },
