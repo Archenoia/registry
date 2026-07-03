@@ -691,15 +691,31 @@ var pages;
             return $ts.location("id");
         };
         taxonomy_data.prototype.init = function () {
+            taxonomy_data.loadMetaboliteData(true, function () {
+                // 假设你已经在 HTML 中准备了一个 div: <div id="chart" style="width: 800px; height: 600px;"></div>             
+                var scatter = new viewer.MassSpecVisualizer($ts("#scatter-chart"));
+                var tic = new viewer.MassSpecVisualizer($ts("#tic-chart"));
+                // 获取数据
+                var myData = taxonomy_data.metabolite_data;
+                // 渲染散点热图
+                scatter.renderScatterHeatmap(__spreadArray([], myData, true));
+                // TIC 图
+                tic.renderBinnedTICChart(__spreadArray([], myData, true));
+            });
         };
-        taxonomy_data.loadMetaboliteData = function () {
+        taxonomy_data.loadMetaboliteData = function (landscape, render) {
             var _this = this;
+            if (landscape === void 0) { landscape = false; }
             $ts.get("".concat(pages.url_user_info), function (msg) {
                 if (msg.code == 0) {
                     $ts("#metab-source").display("\n<br />\n<br />\n<div class=\"d-flex justify-content-center\">\n  <div class=\"spinner-border\" role=\"status\">\n    <span class=\"visually-hidden\">Loading...</span>\n  </div>\n</div>\n<br />\n");
-                    $ts.get("".concat(url_organism_source, "?taxid=").concat(_this.taxid()), function (msg) {
+                    $ts.get("".concat(url_organism_source, "?taxid=").concat(_this.taxid(), "&landscape=").concat(landscape), function (msg) {
                         if (msg.code == 0) {
                             taxonomy_data.showTable(msg.info);
+                            taxonomy_data.metabolite_data = msg.info;
+                            if (landscape && !isNullOrUndefined(render)) {
+                                render();
+                            }
                         }
                         else {
                             $ts("#metab-source").display("<div class=\"alert alert-danger d-flex align-items-center\" role=\"alert\">\n  <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Danger:\"><use xlink:href=\"#exclamation-triangle-fill\"/></svg>\n  <div>\n  Server Error or you have no access to this data.\n</div>\n</div>");
@@ -712,7 +728,7 @@ var pages;
             });
         };
         taxonomy_data.showTable = function (tbl) {
-            var data = $from(tbl).Select(function (a) {
+            var data = $from(tbl).Take(30).Select(function (a) {
                 return {
                     "ID": "<a href=\"/metabolite/".concat(a.id, "\">").concat(a.id, "</a>"),
                     "Name": "<a href=\"/spectrum/?metab=".concat(a.id, "\">").concat(a.name, "</a>"),
@@ -731,6 +747,7 @@ var pages;
                 $ts.appendTable(data, "#metab-source", undefined, { class: "table" });
             }
         };
+        taxonomy_data.metabolite_data = [];
         return taxonomy_data;
     }(Bootstrap));
     pages.taxonomy_data = taxonomy_data;

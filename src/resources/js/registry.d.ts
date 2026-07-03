@@ -97,7 +97,8 @@ declare namespace pages {
         get appName(): string;
         static taxid(): string;
         protected init(): void;
-        static loadMetaboliteData(): void;
+        static metabolite_data: viewer.metabolite_sources[];
+        static loadMetaboliteData(landscape?: boolean, render?: Delegate.Action): void;
         private static showTable;
     }
 }
