@@ -30,7 +30,7 @@ class ncbi_taxonomy {
                     LEFT JOIN
                 ontology mainclass ON mainclass.id = is_mainclass.is_a
             WHERE
-                tax_id = {$taxid}
+                tax_id = {$taxid} AND consensus_value <> 'false'
             ORDER BY main_class , sub_class , trait_name;
         ");
         $traits = array_map(function($t) {
