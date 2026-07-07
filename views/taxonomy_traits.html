@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    ${./includes/head.html}
+</head>
+
+<body class="index-page scrolled">
+    ${./includes/nav.html}
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <main class="main">
+
+        <section id="data" class="section">
+
+            <!-- Section Title -->
+            <div class="container section-title">
+                <h2>{$name} ({$rank_name})</h2>
+                <p>The <a href="https://github.com/grp-bork/porTraits">metaTraits</a> phenotype traits prediction of
+                    this taxon: {$name}
+                    ({$rank_name})</p>
+            </div><!-- End Section Title -->
+
+            <div class="container">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Trait</th>
+                            <th>Unit</th>
+                            <th>Trait Value</th>
+                            <th>Ontology Terms</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <foreach @trait>
+                            <tr>
+                                <td><a href='/trait/?id=@trait["id"]'>@trait["name"]</a></td>
+                                <td>@trait["unit"]</td>
+                                <td>@trait["value"]</td>
+                                <td>@trait["terms"]</td>
+                            </tr>
+                        </foreach>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+    ${./includes/footer.html}
+</body>
+
+</html>

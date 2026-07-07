@@ -79,6 +79,27 @@ class ncbi_taxonomy {
         return $traits;
     }
 
+    public static function taxon_traits_page($id) {
+        $id = Regex::Match($id, "\d+");
+        
+        if (strlen($id) == 0) {
+            RFC7231Error::err400("invalid taxonomy id parameter!");
+        } else {
+            accessController::log_pageview("taxonomy_traits", $id);
+        }
+
+        $tax = self::find_tax($id);
+
+        if (Utils::isDbNull($tax)) {
+            RFC7231Error::err404("Taxonomy data could not be found which is associated with ncbi taxid: $id");
+        }
+
+        $tax["title"] = "{$tax["name"]} ({$tax["rank_name"]})";
+        $tax["trait"] = self::organism_traits($id, 999999);
+
+        return $tax;
+    }
+
     public static function taxon_source_page($id,$page=1,$page_size = 30) {
         $id = Regex::Match($id, "\d+");
         

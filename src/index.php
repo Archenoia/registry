@@ -302,6 +302,11 @@ class App {
         View::Display( $data);
     }
 
+    public function taxonomy_traits($id) {
+        include APP_PATH . "/scripts/taxonomy/page.php";
+        View::Display(ncbi_taxonomy::taxon_traits_page($id));
+    }
+
     /**
      * @access *
      * @uses view
