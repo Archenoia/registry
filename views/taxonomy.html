@@ -51,28 +51,7 @@
           GTDB taxonomy: {$GTDB_id}
         </p>
 
-        <h3>Child Taxonomy</h3>
-
-        <table class="table">
-          <thead>
-            <tr>
-              <th>taxonomy name</th>
-              <th>rank</th>
-              <th>note</th>
-            </tr>
-          </thead>
-          <tbody>
-            <foreach @childs>
-              <tr>
-                <td><a href='/taxonomy/?id=@childs["id"]'>@childs["name"]</a></td>
-                <td>@childs["rank_name"]</td>
-                <td><span class="d-inline-block text-truncate" style="max-width: 850px;">@childs["note"]</span></td>
-              </tr>
-            </foreach>
-          </tbody>
-        </table>
-
-        <h3 id="traits">Organism Traits</h3>
+        <h3 id="traits">Organism Phenotype Traits</h3>
 
         <table class="table">
           <thead>
@@ -94,6 +73,40 @@
             </foreach>
           </tbody>
         </table>
+
+        <a href="/taxonomy_traits/?id={$id}" class="explore-link" style="font-size: large;">
+          View All Phenotype Traits<i class="bi bi-arrow-up-right"></i>
+        </a>
+
+        <br />
+        <br />
+
+        <details>
+          <summary>
+            Taxonomy Lineage
+          </summary>
+
+          <h3>Child Taxonomy</h3>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th>taxonomy name</th>
+                <th>rank</th>
+                <th>note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <foreach @childs>
+                <tr>
+                  <td><a href='/taxonomy/?id=@childs["id"]'>@childs["name"]</a></td>
+                  <td>@childs["rank_name"]</td>
+                  <td><span class="d-inline-block text-truncate" style="max-width: 850px;">@childs["note"]</span></td>
+                </tr>
+              </foreach>
+            </tbody>
+          </table>
+        </details>
 
         <h3 id="enzymes">Enzyme Proteins</h3>
 

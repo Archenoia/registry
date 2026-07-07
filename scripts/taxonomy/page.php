@@ -2,7 +2,7 @@
 
 class ncbi_taxonomy {
 
-    public static function organism_traits($taxid) {
+    public static function organism_traits($taxid, $limits = 25) {
         $traits = new Table(["cad_registry"=>"organism_traits"]);
         $traits = $traits->getDriver()->Fetch("SELECT 
                 traits_id,
@@ -31,7 +31,9 @@ class ncbi_taxonomy {
                 ontology mainclass ON mainclass.id = is_mainclass.is_a
             WHERE
                 tax_id = {$taxid} AND consensus_value <> 'false'
-            ORDER BY main_class , sub_class , trait_name;
+            ORDER BY main_class , sub_class , trait_name
+            LIMIT {$limits}
+            ;
         ");
         $traits = array_map(function($t) {
             $name = "[{$t["main_class"]}/{$t["sub_class"]}] {$t["trait_name"]}";
