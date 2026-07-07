@@ -693,8 +693,8 @@ var pages;
                             "Tissue": a.tissue,
                             "Adducts": a.adducts,
                             "Size": a.size,
-                            "MRM MSn[Q1/Q3]": "<a href=\"#\" class=\"spectrum_id\" data=\"".concat(a.rep_id, "\">").concat(a.q1, " / ").concat(a.q3, "</a>"),
-                            "rt(min)": a.rt
+                            "MRM MSn[Q1/Q3]": "<a href=\"#\" class=\"spectrum_id\" data=\"".concat(a.rep_id, "\"><i class=\"bi bi-eye\"></i><a/> <a href=\"/landscape/metabolite_spectrum/?q1=").concat(a.q1, "\">").concat(a.q1, "</a> / <a href=\"/landscape/metabolite_spectrum/?q3=").concat(a.q3, "\">").concat(a.q3, "</a>"),
+                            "rt(min)": "<a href=\"/landscape/metabolite_spectrum/?rt=".concat(a.rt, "\">").concat(a.rt, "</a>")
                         };
                     });
                     if (data_3.Count > 0) {

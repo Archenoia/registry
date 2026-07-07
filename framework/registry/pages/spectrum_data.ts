@@ -23,8 +23,8 @@ namespace pages {
                             "Tissue": a.tissue,
                             "Adducts": a.adducts,
                             "Size": a.size,
-                            "MRM MSn[Q1/Q3]": `<a href="#" class="spectrum_id" data="${a.rep_id}">${a.q1} / ${a.q3}</a>`,
-                            "rt(min)": a.rt
+                            "MRM MSn[Q1/Q3]": `<a href="#" class="spectrum_id" data="${a.rep_id}"><i class="bi bi-eye"></i><a/> <a href="/landscape/metabolite_spectrum/?q1=${a.q1}">${a.q1}</a> / <a href="/landscape/metabolite_spectrum/?q3=${a.q3}">${a.q3}</a>`,
+                            "rt(min)": `<a href="/landscape/metabolite_spectrum/?rt=${a.rt}">${a.rt}</a>`
                         }
                     });
 
