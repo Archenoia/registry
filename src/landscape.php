@@ -29,6 +29,8 @@ class App {
      * 
      * @access *
      * @uses view
+     * 
+     * @rate 30/min,300/hour,1000/day
     */
     public function metabolite_spectrum($q1=null,$q3=null,$rt=null,$page=1) {
         include_once APP_PATH . "/scripts/mzvault/mrm_lib.php";
