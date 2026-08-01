@@ -11,7 +11,7 @@ return [
     "enterprise_note" => "Suitable for R&D work in production enterprises requiring data localization and large-scale localized deployment",
     "login" => "Free Registration",
     "purchase" => "Contact Distributor",
-    "enterprice" => "100,000",
+    "enterprice" => "250,000",
     "trial_note" => "The commercial version supports a 30-day trial. If you find our software meets your needs, you can decide whether to pay after the trial.",
     "pruchase_note" => "If you require specific customization of software features, please contact our sales team directly.",
     "edu_note1" => "Register directly with a school or research institution email (edu.cn, ac.cn, cas.cn) to access all database resource pages. Registering with other email addresses will result in restricted access to some resources",
