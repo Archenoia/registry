@@ -11,7 +11,7 @@ return [
     "enterprise_note" => "Adapté aux travaux de R&D dans les entreprises de production nécessitant une localisation des données et un déploiement localisé à grande échelle",
     "login" => "Inscription gratuite",
     "purchase" => "Contacter le distributeur",
-    "enterprice" => "250 000",
+    "enterprice" => "300 000",
     "trial_note" => "La version commerciale prend en charge un essai de 30 jours. Si vous trouvez que notre logiciel répond à vos besoins, vous pouvez décider de payer ou non après l'essai.",
     "pruchase_note" => "Si vous avez besoin d'une personnalisation spécifique des fonctionnalités du logiciel, veuillez contacter directement notre équipe commerciale.",
     "edu_note1" => "Inscrivez-vous directement avec un e-mail d'école ou d'institution de recherche (edu.cn, ac.cn, cas.cn) pour accéder à toutes les pages de ressources de la base de données. L'inscription avec d'autres adresses e-mail entraînera un accès restreint à certaines ressources",
