@@ -36,4 +36,14 @@ class App {
         include_once APP_PATH . "/scripts/mzvault/mrm_lib.php";
         View::Display(mrm_lib::get_mrm($q1,$q3,$rt,$page));
     }
+
+    /**
+     * @uses api
+     * @rate 30/min,300/hour,1000/day
+    */
+    public function mrm_table($kegg = null) {
+        include_once APP_PATH . "/scripts/mzvault/mrm_lib.php";
+        $table = mrm_lib::mrm_table($kegg);
+        controller::success($table);
+    }
 }
