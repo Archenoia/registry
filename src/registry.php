@@ -114,11 +114,11 @@ class App {
      * 
      * @rate 30/min,500/hour,2000/day
     */
-    public function organism_source($taxid, $landscape = false) {
+    public function organism_source($taxid, $landscape = false, $tissue = "*") {
         include APP_PATH . "/scripts/taxonomy/metabolites.php";
-        
+
         $size = $landscape ? 5000 : 30;        
-        $data = metabolite::organism_source($taxid, 1, $size);
+        $data = metabolite::organism_source($taxid, 1, $size, $tissue);
         $samples = metabolite::organism_samples($taxid);
 
         controller::success([

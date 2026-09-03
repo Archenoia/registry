@@ -50,13 +50,15 @@ namespace pages {
                     taxonomy_data.showTable(metabolites);
                     taxonomy_data.metabolite_data = metabolites;
 
-                    if (tissue != "*") {
+                    if (tissue == "*") {
                         let sampleSet: HTMLSelectElement = <any>$ts("#species-samples").clear();
                         let sample_tags: string[] = (<any>msg).info.samples;
 
                         for (let id of sample_tags) {
                             sampleSet.appendChild($ts("<option>", { value: id }).display(id));
                         }
+
+                        sampleSet.onchange = () => taxonomy_data.requestPage(landscape, render, sampleSet.value);
                     }
 
                     if (landscape && !isNullOrUndefined(render)) {

@@ -762,13 +762,14 @@ var pages;
                     var metabolites = msg.info.data;
                     taxonomy_data.showTable(metabolites);
                     taxonomy_data.metabolite_data = metabolites;
-                    if (tissue != "*") {
-                        var sampleSet = $ts("#species-samples").clear();
+                    if (tissue == "*") {
+                        var sampleSet_1 = $ts("#species-samples").clear();
                         var sample_tags = msg.info.samples;
                         for (var _i = 0, sample_tags_1 = sample_tags; _i < sample_tags_1.length; _i++) {
                             var id = sample_tags_1[_i];
-                            sampleSet.appendChild($ts("<option>", { value: id }).display(id));
+                            sampleSet_1.appendChild($ts("<option>", { value: id }).display(id));
                         }
+                        sampleSet_1.onchange = function () { return taxonomy_data.requestPage(landscape, render, sampleSet_1.value); };
                     }
                     if (landscape && !isNullOrUndefined(render)) {
                         render();

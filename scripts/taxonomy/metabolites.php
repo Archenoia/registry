@@ -3,7 +3,8 @@
 class metabolite {
 
     public static function organism_source($taxid, $page =1, $page_size = 150, $tissue = null) {
-        if (!Utils::IsDbNull($tissue)) {
+        if ((!Utils::IsDbNull($tissue)) && $tissue != "*") {
+            $tissue = urldecode($tissue);
             $tissue = "AND `representative`.`tissue` = '{$tissue}'";
         } else {
             $tissue = "";
