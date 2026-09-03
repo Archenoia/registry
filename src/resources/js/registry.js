@@ -759,9 +759,9 @@ var pages;
             $ts("#metab-source").display("\n<br />\n<br />\n<div class=\"d-flex justify-content-center\">\n  <div class=\"spinner-border\" role=\"status\">\n    <span class=\"visually-hidden\">Loading...</span>\n  </div>\n</div>\n<br />\n");
             $ts.get("".concat(url_organism_source, "?taxid=").concat(this.taxid(), "&landscape=").concat(landscape, "&tissue=").concat(encodeURIComponent(tissue)), function (msg) {
                 if (msg.code == 0) {
-                    var metabolites = msg.info.data;
-                    taxonomy_data.showTable(metabolites);
-                    taxonomy_data.metabolite_data = metabolites;
+                    var metabolites_1 = msg.info.data;
+                    taxonomy_data.showTable(metabolites_1);
+                    taxonomy_data.metabolite_data = metabolites_1;
                     if (tissue == "*") {
                         var sampleSet_1 = $ts("#species-samples").clear();
                         var sample_tags = msg.info.samples;
@@ -771,6 +771,7 @@ var pages;
                             sampleSet_1.appendChild($ts("<option>", { value: id }).display(id));
                         }
                         sampleSet_1.onchange = function () { return taxonomy_data.requestPage(landscape, render, sampleSet_1.value); };
+                        $ts("#download").onclick = function () { return taxonomy_data.downloadTable(metabolites_1); };
                     }
                     if (landscape && !isNullOrUndefined(render)) {
                         render();
@@ -780,6 +781,24 @@ var pages;
                     $ts("#metab-source").display("<div class=\"alert alert-danger d-flex align-items-center\" role=\"alert\">\n  <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Danger:\"><use xlink:href=\"#exclamation-triangle-fill\"/></svg>\n  <div>\n  Server Error or you have no access to this data.\n</div>\n</div>");
                 }
             });
+        };
+        taxonomy_data.downloadTable = function (metabolites) {
+            var data = $from(metabolites).Take(1000).Select(function (a) {
+                return {
+                    "ID": a.id,
+                    "Name": a.name,
+                    "Formula": a.formula,
+                    "Adducts": a.adducts,
+                    "MRM[Q1/Q3]": "".concat((+a.mz).toFixed(4), " / ").concat((+a.q3).toFixed(2)),
+                    "RT": a.rt + " min",
+                    "Score": a.score
+                };
+            });
+            var uri = {
+                mime_type: "application/csv",
+                data: Base64.encode(csv.toDataFrame(data).buildDoc())
+            };
+            DOM.download("sample-metabolites.csv", uri);
         };
         taxonomy_data.loadMetaboliteData = function (landscape, render) {
             if (landscape === void 0) { landscape = false; }

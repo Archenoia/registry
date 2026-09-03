@@ -61,6 +61,7 @@ namespace pages {
                         }
 
                         sampleSet.onchange = () => taxonomy_data.requestPage(landscape, render, sampleSet.value);
+                        $ts("#download").onclick = () => taxonomy_data.downloadTable(metabolites);
                     }
 
                     if (landscape && !isNullOrUndefined(render)) {
@@ -76,6 +77,26 @@ namespace pages {
 </div>`);
                 }
             });
+        }
+
+        public static downloadTable(metabolites: viewer.metabolite_sources[]) {
+            let data = $from(metabolites).Take(1000).Select(a => {
+                return {
+                    "ID": a.id,
+                    "Name": a.name,
+                    "Formula": a.formula,
+                    "Adducts": a.adducts,
+                    "MRM[Q1/Q3]": `${(+a.mz).toFixed(4)} / ${(+a.q3).toFixed(2)}`,
+                    "RT": a.rt + " min",
+                    "Score": a.score
+                };
+            });
+            let uri = <DataURI>{
+                mime_type: "application/csv",
+                data: Base64.encode(csv.toDataFrame(data).buildDoc())
+            };
+
+            DOM.download("sample-metabolites.csv", uri);
         }
 
         public static loadMetaboliteData(landscape: boolean = false, render?: Delegate.Action) {
