@@ -762,8 +762,15 @@ var pages;
                     $ts("#metab-source").display("\n<br />\n<br />\n<div class=\"d-flex justify-content-center\">\n  <div class=\"spinner-border\" role=\"status\">\n    <span class=\"visually-hidden\">Loading...</span>\n  </div>\n</div>\n<br />\n");
                     $ts.get("".concat(url_organism_source, "?taxid=").concat(_this.taxid(), "&landscape=").concat(landscape), function (msg) {
                         if (msg.code == 0) {
-                            taxonomy_data.showTable(msg.info);
-                            taxonomy_data.metabolite_data = msg.info;
+                            var metabolites = msg.info.data;
+                            var sampleSet = $ts("#species-samples").clear();
+                            var sample_tags = msg.info.samples;
+                            taxonomy_data.showTable(metabolites);
+                            taxonomy_data.metabolite_data = metabolites;
+                            for (var _i = 0, sample_tags_1 = sample_tags; _i < sample_tags_1.length; _i++) {
+                                var id = sample_tags_1[_i];
+                                sampleSet.appendChild($ts("<option>", { value: id }).display(id));
+                            }
                             if (landscape && !isNullOrUndefined(render)) {
                                 render();
                             }

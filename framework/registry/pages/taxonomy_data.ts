@@ -47,8 +47,16 @@ namespace pages {
 `);
                     $ts.get(`${url_organism_source}?taxid=${this.taxid()}&landscape=${landscape}`, msg => {
                         if (msg.code == 0) {
-                            taxonomy_data.showTable(<any>msg.info);
-                            taxonomy_data.metabolite_data = <any>msg.info;
+                            let metabolites = (<any>msg).info.data;
+                            let sampleSet: HTMLSelectElement = <any>$ts("#species-samples").clear();
+                            let sample_tags: string[] = (<any>msg).info.samples;
+
+                            taxonomy_data.showTable(metabolites);
+                            taxonomy_data.metabolite_data = metabolites;
+
+                            for (let id of sample_tags) {
+                                sampleSet.appendChild($ts("<option>", { value: id }).display(id));
+                            }
 
                             if (landscape && !isNullOrUndefined(render)) {
                                 (<Delegate.Action>render)();

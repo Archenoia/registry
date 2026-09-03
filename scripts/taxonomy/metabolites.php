@@ -26,4 +26,8 @@ class metabolite {
 
         return (new Table(["mzvault"=>"sampleinfo"]))->getDriver()->Fetch($sql);
     }
+
+    public static function organism_samples($taxid) {
+        return (new Table(["mzvault"=>"sampleinfo"]))->where(["taxid" => $taxid])->distinct()->project("tissue");
+    }
 }

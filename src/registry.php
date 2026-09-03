@@ -116,8 +116,15 @@ class App {
     */
     public function organism_source($taxid, $landscape = false) {
         include APP_PATH . "/scripts/taxonomy/metabolites.php";
+        
         $size = $landscape ? 5000 : 30;        
         $data = metabolite::organism_source($taxid, 1, $size);
-        controller::success($data);
+        $samples = metabolite::organism_samples($taxid);
+
+        controller::success([
+            "count" => count($data),
+            "samples" => $samples,
+            "data" => $data
+        ]);
     }
 }
