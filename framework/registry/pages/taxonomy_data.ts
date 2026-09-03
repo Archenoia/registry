@@ -32,10 +32,8 @@ namespace pages {
 
         static metabolite_data: viewer.metabolite_sources[] = [];
 
-        public static loadMetaboliteData(landscape: boolean = false, render?: Delegate.Action) {
-            $ts.get(`${url_user_info}`, msg => {
-                if (msg.code == 0) {
-                    $ts("#metab-source").display(`
+        private static requestPage(landscape: boolean, render: Delegate.Action, tissue: string = "*") {
+            $ts("#metab-source").display(`
 <br />
 <br />
 <div class="d-flex justify-content-center">
@@ -45,32 +43,41 @@ namespace pages {
 </div>
 <br />
 `);
-                    $ts.get(`${url_organism_source}?taxid=${this.taxid()}&landscape=${landscape}`, msg => {
-                        if (msg.code == 0) {
-                            let metabolites = (<any>msg).info.data;
-                            let sampleSet: HTMLSelectElement = <any>$ts("#species-samples").clear();
-                            let sample_tags: string[] = (<any>msg).info.samples;
+            $ts.get(`${url_organism_source}?taxid=${this.taxid()}&landscape=${landscape}&tissue=${encodeURIComponent(tissue)}`, msg => {
+                if (msg.code == 0) {
+                    let metabolites = (<any>msg).info.data;
 
-                            taxonomy_data.showTable(metabolites);
-                            taxonomy_data.metabolite_data = metabolites;
+                    taxonomy_data.showTable(metabolites);
+                    taxonomy_data.metabolite_data = metabolites;
 
-                            for (let id of sample_tags) {
-                                sampleSet.appendChild($ts("<option>", { value: id }).display(id));
-                            }
+                    if (tissue != "*") {
+                        let sampleSet: HTMLSelectElement = <any>$ts("#species-samples").clear();
+                        let sample_tags: string[] = (<any>msg).info.samples;
 
-                            if (landscape && !isNullOrUndefined(render)) {
-                                (<Delegate.Action>render)();
-                            }
+                        for (let id of sample_tags) {
+                            sampleSet.appendChild($ts("<option>", { value: id }).display(id));
+                        }
+                    }
 
-                        } else {
-                            $ts("#metab-source").display(`<div class="alert alert-danger d-flex align-items-center" role="alert">
+                    if (landscape && !isNullOrUndefined(render)) {
+                        render();
+                    }
+
+                } else {
+                    $ts("#metab-source").display(`<div class="alert alert-danger d-flex align-items-center" role="alert">
   <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
   <div>
   Server Error or you have no access to this data.
 </div>
 </div>`);
-                        }
-                    });
+                }
+            });
+        }
+
+        public static loadMetaboliteData(landscape: boolean = false, render?: Delegate.Action) {
+            $ts.get(`${url_user_info}`, msg => {
+                if (msg.code == 0) {
+                    taxonomy_data.requestPage(landscape, <Delegate.Action>render);
                 } else {
                     // do nothing at here
                 }

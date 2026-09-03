@@ -107,6 +107,7 @@ declare namespace pages {
         static taxid(): string;
         protected init(): void;
         static metabolite_data: viewer.metabolite_sources[];
+        private static requestPage;
         static loadMetaboliteData(landscape?: boolean, render?: Delegate.Action): void;
         private static showTable;
     }

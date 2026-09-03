@@ -754,31 +754,36 @@ var pages;
                 });
             });
         };
+        taxonomy_data.requestPage = function (landscape, render, tissue) {
+            if (tissue === void 0) { tissue = "*"; }
+            $ts("#metab-source").display("\n<br />\n<br />\n<div class=\"d-flex justify-content-center\">\n  <div class=\"spinner-border\" role=\"status\">\n    <span class=\"visually-hidden\">Loading...</span>\n  </div>\n</div>\n<br />\n");
+            $ts.get("".concat(url_organism_source, "?taxid=").concat(this.taxid(), "&landscape=").concat(landscape, "&tissue=").concat(encodeURIComponent(tissue)), function (msg) {
+                if (msg.code == 0) {
+                    var metabolites = msg.info.data;
+                    taxonomy_data.showTable(metabolites);
+                    taxonomy_data.metabolite_data = metabolites;
+                    if (tissue != "*") {
+                        var sampleSet = $ts("#species-samples").clear();
+                        var sample_tags = msg.info.samples;
+                        for (var _i = 0, sample_tags_1 = sample_tags; _i < sample_tags_1.length; _i++) {
+                            var id = sample_tags_1[_i];
+                            sampleSet.appendChild($ts("<option>", { value: id }).display(id));
+                        }
+                    }
+                    if (landscape && !isNullOrUndefined(render)) {
+                        render();
+                    }
+                }
+                else {
+                    $ts("#metab-source").display("<div class=\"alert alert-danger d-flex align-items-center\" role=\"alert\">\n  <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Danger:\"><use xlink:href=\"#exclamation-triangle-fill\"/></svg>\n  <div>\n  Server Error or you have no access to this data.\n</div>\n</div>");
+                }
+            });
+        };
         taxonomy_data.loadMetaboliteData = function (landscape, render) {
-            var _this = this;
             if (landscape === void 0) { landscape = false; }
             $ts.get("".concat(pages.url_user_info), function (msg) {
                 if (msg.code == 0) {
-                    $ts("#metab-source").display("\n<br />\n<br />\n<div class=\"d-flex justify-content-center\">\n  <div class=\"spinner-border\" role=\"status\">\n    <span class=\"visually-hidden\">Loading...</span>\n  </div>\n</div>\n<br />\n");
-                    $ts.get("".concat(url_organism_source, "?taxid=").concat(_this.taxid(), "&landscape=").concat(landscape), function (msg) {
-                        if (msg.code == 0) {
-                            var metabolites = msg.info.data;
-                            var sampleSet = $ts("#species-samples").clear();
-                            var sample_tags = msg.info.samples;
-                            taxonomy_data.showTable(metabolites);
-                            taxonomy_data.metabolite_data = metabolites;
-                            for (var _i = 0, sample_tags_1 = sample_tags; _i < sample_tags_1.length; _i++) {
-                                var id = sample_tags_1[_i];
-                                sampleSet.appendChild($ts("<option>", { value: id }).display(id));
-                            }
-                            if (landscape && !isNullOrUndefined(render)) {
-                                render();
-                            }
-                        }
-                        else {
-                            $ts("#metab-source").display("<div class=\"alert alert-danger d-flex align-items-center\" role=\"alert\">\n  <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Danger:\"><use xlink:href=\"#exclamation-triangle-fill\"/></svg>\n  <div>\n  Server Error or you have no access to this data.\n</div>\n</div>");
-                        }
-                    });
+                    taxonomy_data.requestPage(landscape, render);
                 }
                 else {
                     // do nothing at here
