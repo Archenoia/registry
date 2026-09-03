@@ -54,6 +54,8 @@ namespace pages {
                         let sampleSet: HTMLSelectElement = <any>$ts("#species-samples").clear();
                         let sample_tags: string[] = (<any>msg).info.samples;
 
+                        sampleSet.appendChild($ts("<option>", { value: "*" }).display("All samples"));
+
                         for (let id of sample_tags) {
                             sampleSet.appendChild($ts("<option>", { value: id }).display(id));
                         }

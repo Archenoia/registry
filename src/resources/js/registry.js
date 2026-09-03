@@ -765,6 +765,7 @@ var pages;
                     if (tissue == "*") {
                         var sampleSet_1 = $ts("#species-samples").clear();
                         var sample_tags = msg.info.samples;
+                        sampleSet_1.appendChild($ts("<option>", { value: "*" }).display("All samples"));
                         for (var _i = 0, sample_tags_1 = sample_tags; _i < sample_tags_1.length; _i++) {
                             var id = sample_tags_1[_i];
                             sampleSet_1.appendChild($ts("<option>", { value: id }).display(id));
