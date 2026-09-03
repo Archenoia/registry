@@ -17,6 +17,8 @@ class accessController extends controller {
     public function accessControl() {        
         if (MAINTENANCE_MODE && !self::maintenance_mode()) {
             \Redirect("/maintenance_mode/");
+        } else {
+            // return true;
         }
 
         $audit = new RestrictionMySQL(Utils::UserIPAddress(), $this);
